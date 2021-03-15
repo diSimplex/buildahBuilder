@@ -16,8 +16,7 @@ We use [Buildah](https://buildah.io/)
 ([GitHub](https://github.com/containers/buildah)) to allow flexible access 
 to your containerized development environment. 
 
-Other than SSH access to one or more compile hosts, the only three
-dependencies required to use BuildahBuilder are: 
+The only three dependencies required to use BuildahBuilder are: 
 
 1. Buildah,
 2. CEKit (and hence Python),

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# This shell script enters a running development container
+
+buildah unshare $*
