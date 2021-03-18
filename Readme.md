@@ -1,6 +1,6 @@
-# Buidah Builder
+# Podman Builder
 
-Containerized development using [Buildah](https://buildah.io/) and 
+Containerized development using (rootless) [Podman](https://podman.io/) and 
 [CEKit](https://cekit.io/).
 
 We are not building contianer images, instead our focus is on doing day to 
@@ -10,17 +10,16 @@ different sets of tools and libraries installed on either.
 
 We use [CEKit](https://cekit.io/) 
 ([GitHub](https://github.com/cekit/cekit)) to provide a modular way of 
-describing the tools and libraries in your development environment. 
+describing the tools and libraries in your development environment.
 
-We use [Buildah](https://buildah.io/) 
-([GitHub](https://github.com/containers/buildah)) to allow flexible access 
+We use (rootless) [Podman](https://podman.io/) 
+([GitHub](https://github.com/containers/podman)) to allow flexible access 
 to your containerized development environment. 
 
-The only three dependencies required to use BuildahBuilder are: 
+The only three dependencies required to use PodmanBuilder are: 
 
-1. Buildah,
+1. Podman (rootless),
 2. CEKit (and hence Python),
 3. POSIX shell
 
 on each compile host.
-

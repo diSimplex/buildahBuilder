@@ -1,21 +1,19 @@
-# Buildah Builder Architecture
+# Podman Builder Architecture
 
 In reality this project is a very simple wrapper around both
-[Buildah](https://buildah.io/) 
-([GitHub](https://github.com/containers/buildah)) and 
+[Podman](https://podman.io/) 
+([GitHub](https://github.com/containers/podman)) and 
 [CEKit](https://cekit.io/) 
 ([GitHub](https://github.com/cekit/cekit)).
 
 As such this project really only gives an example of using CEKit and 
-Buildah together to containerize a development infrastructure. 
+Podman together to containerize a development infrastructure. 
 
 We use CEKit to pre-build the development container with all of the 
 required tools and libraries. 
 
-We use Buildah to allow a developer to gain direct *"shell"* access to the 
+We use Podman to allow a developer to gain direct *"shell"* access to the 
 code being developed. 
-
-
 
 ## Questions
 
