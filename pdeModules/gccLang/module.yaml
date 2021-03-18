@@ -1,0 +1,28 @@
+# This CEKit module describes how to install Lua v5.4 into a pde.
+
+# This module:
+# - assumes a Debian based container,
+
+schema_version: 1
+
+name: gccLang
+version: 1.0
+description: Installs gcc based development tools
+
+packages:
+  install:
+    - gcc
+    - g++
+    - git
+    - make
+    - cmake
+    - pkg-config
+    - dh-autoreconf
+    - doxygen
+    - webfs
+
+execute:
+  - script: setupGccLang.sh
+
+artifacts:
+  - path: codeDocServer

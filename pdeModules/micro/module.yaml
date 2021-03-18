@@ -1,0 +1,22 @@
+# This CEKit module describes how to install the Micro editor into a pde
+
+# This module:
+# - assumes a Debian based container,
+
+schema_version: 1
+
+name: micro
+version: 1.0
+description: Installs the micro editor
+
+execute:
+  - script: installMicro.sh
+
+artifacts:
+  - name: micro
+    url: https://github.com/zyedidia/micro/releases/download/v2.0.8/micro-2.0.8-linux64.tar.gz
+    target: micro.tar
+    
+  - name: microReWrapText
+    url: https://github.com/stephengaito/microReWrapText/tarball/master
+    target: microReWrapText.tar

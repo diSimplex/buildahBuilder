@@ -1,0 +1,89 @@
+# This CEKit module describes how to install Lua v5.4 into a pde.
+
+# This module:
+# - assumes a Debian based container,
+# - requires the gccLang module
+
+schema_version: 1
+
+name: lua
+version: 1.0
+description: Adds Lua v5.4 into a Podman development environment
+
+execute:
+  - script: installLua.sh
+
+artifacts:
+  - name: lua
+    #see: https://www.lua.org/download.html
+    url: http://www.lua.org/ftp/lua-5.4.2.tar.gz
+    target: lua.tar.gz
+
+  - path: lua.lua.patch
+
+  - name: luaFileSystem
+    #see: https://github.com/keplerproject/luafilesystem
+    url: https://github.com/keplerproject/luafilesystem/archive/v1_8_0.tar.gz
+    target: luaFileSystem.tar.gz
+    
+  - path: lua.luaFileSystem.patch
+
+  - name: luaSocket
+    #see: https://github.com/diegonehab/luasocket
+    url: https://api.github.com/repos/diegonehab/luasocket/tarball/5b18e47
+    target: luaSocket.tar.gz
+
+  - path: lua.luaSocket.patch
+
+  - name: luaCJson
+    #see: https://github.com/mpx/lua-cjson
+    url: https://api.github.com/repos/mpx/lua-cjson/tarball/e8972ac
+    target: luaCJson.tar.gz
+
+  - path: lua.luaCJson.patch
+
+  - name: luaDKJson
+    #see: http://dkolf.de/src/dkjson-lua.fsl/home
+    url: http://dkolf.de/src/dkjson-lua.fsl/raw/dkjson.lua?name=16cbc26080996d9da827df42cb0844a25518eeb3
+    target: luaDKJson
+
+  - path: lua.luaDKJson.patch
+
+  - name: luaLunaJson
+    #see: https://github.com/grafi-tt/lunajson
+    url: https://api.github.com/repos/grafi-tt/lunajson/tarball/1.2.3
+    target: luaLunaJson.tar.gz
+
+  - path: lua.luaLunaJson.patch
+
+  - name: luaUUID
+    #see: https://github.com/Tieske/uuid
+    url: https://api.github.com/repos/Tieske/uuid/tarball/75f8428
+    target: luaUUID.tar.gz
+
+  - path: lua.luaUUID.patch
+
+  - name: luaNATS
+    #see: https://github.com/DawnAngel/lua-nats
+    url: https://api.github.com/repos/DawnAngel/lua-nats/tarball/980da7a
+    target: luaNATS.tar.gz
+
+  - path: lua.luaNATS.patch
+
+  - name: luaYAML
+    #see: https://github.com/exosite/lua-yaml
+    url: https://api.github.com/repos/exosite/lua-yaml/tarball/009b129
+    target: luaYAML.tar.gz
+
+  - path: lua.luaYAML.patch
+
+  - name: luaPPrint
+    #see: https://github.com/jagt/pprint.lua
+    url: https://api.github.com/repos/jagt/pprint.lua/tarball/1848a3e
+    target: luaPPrint.tar.gz
+      
+  - path: lua.luaPPrint.patch
+
+modules:
+  install:
+    - name: gccLang

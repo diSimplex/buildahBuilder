@@ -1,0 +1,11 @@
+--- a/Makefile  2016-08-25 12:15:45.000000000 +0000
++++ b/Makefile  2020-11-25 09:27:18.235501167 +0000
+@@ -11,7 +11,7 @@
+ ##                          multi-threaded application. Requries _pthreads_.
+ 
+ ##### Build defaults #####
+-LUA_VERSION =       5.3
++LUA_VERSION =       5.4
+ TARGET =            cjson.so
+ PREFIX =            /usr/local
+ #CFLAGS =            -g -Wall -pedantic -fno-inline

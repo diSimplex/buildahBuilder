@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# This shell script automates the running of a simple webfsd based webserver 
+# for the Doxygen C documentation
+
+source /common/kvmVars
+source /common/ipAddress
+
+echo ""
+echo "http://$ipAddress:6161/index.html"
+echo ""
+echo "type ^C to exit"
+echo ""
+
+cat > index.html <<HTMLDOC
+<html><head>
+<title>Code Documentation</title>
+</head><body>
+
+<h1>Code Documentation</h1>
+
+<ul>
+
+<li><a href="http://$ipAddress:6060" target="_blank">Go Documentation</a>
+<p>GoDoc documentation</p></li>
+
+<li><a href="html/index.html" target="_blank">C Documentation</a>
+<p>Doxygen documentation</p></li>
+
+<li><a href="http://www.doxygen.nl/manual/" target="_blank">Doxygen Manual</a>
+<p>Doxygen Manual</p></li>
+
+</ul>
+</body></html>
+HTMLDOC
+
+echo webfsd -p 6161 -F
+webfsd -p 6161 -F
+
