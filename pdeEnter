@@ -1,4 +1,10 @@
 #!/bin/sh
 
-# This shell script enters a running development container
+# This shell script enters a running podman development environment
 
+if [ "$#" -ne 1 ]; then
+  echo "(pde) exec requires then name of a podman dev env"
+  exit -1
+fi
+
+podman exec -it $1 bash -l

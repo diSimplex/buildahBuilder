@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# This shell script installs the podman dev environments shell scripts
+
+binDir=$HOME/bin
+
+mkdir -p $binDir
+
+#cp -r pde* $binDir
+ln -s -t $binDir $(pwd)/pde* 
