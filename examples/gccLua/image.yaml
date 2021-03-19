@@ -11,7 +11,7 @@ packages:
 
 modules:
   repositories:
-    - path: ../../pdeModules
+    - path: {{ curDir }}/../../pdeModules
   install:
     - name: gccLang
     - name: micro

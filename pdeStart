@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+# This python3 script starts a pde container
+
+import click
+import yaml
+import sys
+
+@click.group()
+def cli():
+  pass
+  
+@click.command()
+def hello():
+  click.echo(sys.path)
+  click.echo("Hello world!")
+
+cli.add_command(hello)
+
+@click.command()
+def goodbye():
+  click.echo(sys.path)
+  click.echo("Goodbye!")
+
+cli.add_command(goodbye)
+
+"""
+imageYamlFile = open("image.yaml", 'r')
+image = yaml.safe_load(imageYamlFile)
+
+pdeYamlFile = open("pde.yaml", 'r')
+pde = yaml.safe_load(pdeYamlFile)
+pde.update(image)
+print(yaml.dump(pde))
+"""
+
+if __name__ == '__main__':
+  cli()

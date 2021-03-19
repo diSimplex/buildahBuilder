@@ -1,6 +1,0 @@
-#!/bin/sh
-
-# This shell script builds a development container environment using 
-# CEKit. 
-
-cekit -v build podman $*
