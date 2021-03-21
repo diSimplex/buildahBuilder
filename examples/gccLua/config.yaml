@@ -1,1 +1,3 @@
-something: silly
+# Local YAML configuraiton parameters for use in Jinja2 templates in this 
+# directory. 
+

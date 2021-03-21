@@ -1,6 +1,6 @@
 # This CEKit description builds a pde with GCC and Lua v5.4
 
-name: gcc-lua
+name: "{{ pdeName | lower }}"
 version: 1.0
 description: Create a pde with GCC, micro and Lua installed
 
@@ -11,7 +11,7 @@ packages:
 
 modules:
   repositories:
-    - path: {{ curDir }}/../../pdeModules
+    - path: "{{ curDir }}/../../pdeModules"
   install:
     - name: gccLang
     - name: micro

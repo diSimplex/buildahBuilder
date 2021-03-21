@@ -17,6 +17,17 @@ defaultConfig = {
   'verbose'     : False
 }
 
+def sanitizeFilePath(config, filePathKey, pathPrefix) :
+  if config[filePathKey][0] == "~" :
+    config[filePathKey] = os.path.abspath(
+        os.path.expanduser(config[filePathKey]))
+
+  if pathPrefix is not None :
+    config[filePathKey] = os.path.join(pathPrefix, config[filePathKey])
+    
+  if config[filePathKey][0] != "/" :
+    config[filePathKey] = os.path.abspath(config[filePathKey])
+
 def loadConfig(pdeName, configPath, verbose):
 
   # start with the default configuration (above)
@@ -31,7 +42,7 @@ def loadConfig(pdeName, configPath, verbose):
     globalConfigFile.close()
     if globalConfig is not None : 
       config.update(globalConfig)
-  except IOError:
+  except :
     if verbose is not None and verbose :
       print("INFO: no global configuration file found: [{}]".format(configPath))
 
@@ -42,13 +53,16 @@ def loadConfig(pdeName, configPath, verbose):
     localConfigFile.close()
     if localConfig is not None : 
       config.update(localConfig)
-  except IOError:
+  except :
     if verbose is not None and verbose :
       print("INFO: no local configuration file found: [{}]".format(config['configYaml']))
 
   # Now add in command line argument/options
   if pdeName is not None :
     config['pdeName'] = pdeName
+  else:
+    print("ERROR: a pdeName must be specified!")
+    os.exit(-1)
 
   if verbose is not None :
     config['verbose'] = verbose
@@ -56,21 +70,54 @@ def loadConfig(pdeName, configPath, verbose):
   # Now sanitize any known configurable paths
   if configPath is not None :
     config['configPath'] = configPath
-    config['configDir'] = os.path.dirname(configPath)
-    
-  if config['cekitConfig'][0] == "~" :
-    config['cekitConfig'] = os.path.abspath(
-        os.path.expanduser(config['cekitConfig']))
+  else:
+    print("ERROR: a configPath must be specified!")
+    os.exit(-1)
+  
+  sanitizeFilePath(config, 'configPath', None)
+  config['configDir'] = os.path.dirname(configPath)
+  sanitizeFilePath(config, 'cekitConfig', config['configDir'])
 
-  if config['cekitConfig'][0] != "/" :
-    config['cekitConfig'] = os.path.abspath(
-        os.path.join(config['configDir'], config['cekitConfig']))
-
-  config['commonDir'] = os.path.abspath(os.path.expanduser(config['commonDir']))
+  sanitizeFilePath(config, 'commonDir', None)
   config['pdeDir'] = os.path.join(config['commonDir'], "pde", config['pdeName'])
-
+  sanitizeFilePath(config, 'imageYaml', config['pdeDir'])
+  sanitizeFilePath(config, 'pdeYaml', config['pdeDir'])
   config['curDir'] = os.path.abspath(os.getcwd())
   config['homeDir'] = os.path.expanduser("~")
+
+  # Now add in the image.yaml (if it exists)
+  config['image'] = {}
+  try:
+    imageFile = open(config['imageYaml'], 'r')
+    image = yaml.safe_load(imageFile)
+    imageFile.close()
+    if image is not None : 
+      config['image'] = image
+  except IOError : 
+    if verbose is not None and verbose :
+      print("INFO: could not load the image file: [{}]".format(config['imageYaml']))
+  except Exception as e :
+    if verbose is not None and verbose :
+      print("INFO: could not load the image file: [{}]".format(config['imageYaml']))
+      print("    > " + "\n    > ".join(str(e).split('\n')))
+      print("  Did you remember to wrap all YAML values\n  with Jinja2 variables in quotes?")
+
+  # Now add in the pde.yaml (if it exists)
+  config['pde'] = {}
+  try:
+    pdeFile = open(config['pdeYaml'], 'r')
+    pde = yaml.safe_load(pdeFile)
+    pdeFile.close()
+    if pde is not None : 
+      config['pde'] = pde
+  except IOError : 
+    if verbose is not None and verbose :
+      print("INFO: could not load the pde file: [{}]".format(config['pdeYaml']))
+  except Exception as e :
+    if verbose is not None and verbose :
+      print("INFO: could not load the pde file: [{}]".format(config['pdeYaml']))
+      print("\t" + "\n\t".join(str(e).split('\n')))
+      print("\tDid you remember to wrap all YAML values\n\twith Jinja2 variables in quotes?")
 
   # Setup logging
   if config['verbose'] :
@@ -101,7 +148,7 @@ def cli(ctx, pde_name, config_file, verbose):
 
     For details on all other configuration parameters type:
 
-        pde -v help config
+        pde -v <<pdeName>> config
   """
   ctx.ensure_object(dict)
   ctx.obj = loadConfig(pde_name, config_file, verbose)

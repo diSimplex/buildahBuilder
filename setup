@@ -7,4 +7,5 @@ binDir=$HOME/bin
 mkdir -p $binDir
 
 #cp -r pde* $binDir
-ln -s -t $binDir $(pwd)/pde* 
+ln -s -t $binDir $(pwd)/pde
+ln -s -t $binDir $(pwd)/pdeCmds
