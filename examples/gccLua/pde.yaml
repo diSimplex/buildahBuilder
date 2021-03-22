@@ -1,3 +1,5 @@
 # This is a test description of a pde
 
-test: Hello world!
+hosts:
+  - nn01:10.0.0.1
+  - git.perceptisys.co.uk:10.0.0.1

@@ -1,9 +1,10 @@
 # This is the pde package
 
 import click
-import os
-import yaml
 import logging
+import os
+import sys
+import yaml
 
 ########################################################################
 # Handle configuration
@@ -62,7 +63,7 @@ def loadConfig(pdeName, configPath, verbose):
     config['pdeName'] = pdeName
   else:
     print("ERROR: a pdeName must be specified!")
-    os.exit(-1)
+    sys.exit(-1)
 
   if verbose is not None :
     config['verbose'] = verbose
@@ -72,7 +73,7 @@ def loadConfig(pdeName, configPath, verbose):
     config['configPath'] = configPath
   else:
     print("ERROR: a configPath must be specified!")
-    os.exit(-1)
+    sys.exit(-1)
   
   sanitizeFilePath(config, 'configPath', None)
   config['configDir'] = os.path.dirname(configPath)

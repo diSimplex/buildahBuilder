@@ -27,32 +27,53 @@ def start(ctx):
   """
   
   image = {}
-  if 'image' in ctx.obj :
+  if 'image' in ctx.obj and ctx.obj['image'] :
     image = ctx.obj['image']
   else :
-    logger.error("No image description found ... can not start pde!")
-    os.exit(-1)
+    logging.error("No image description found ... can not start pde!")
+    sys.exit(-1)
 
   pde = {}
   if 'pde' in ctx.obj :
     pde = ctx.obj['pde']
   else :
-    logger.error("No pde description found ... can not start pde!")
-    os.exit(-1)
+    logging.error("No pde description found ... can not start pde!")
+    sys.exit(-1)
 
-  xsock = "/tmp/.X11-unix"
 
   logging.info("(re)creating the commons directory")
   os.makedirs(ctx.obj['pdeDir'], exist_ok=True)
+
+  theRunEnvs = ""
+  runEnvs = {}
+  runEnvs['DISPLAY'] = "unix:0.0"
+  sshAuthSock    = os.getenv('SSH_AUTH_SOCK')
+  sshAuthSockDir = None
+  if sshAuthSock :
+    runEnvs['SSH_AUTH_SOCK'] = sshAuthSock
+    sshAuthSockDir = os.path.dirname(sshAuthSock)
+  if 'runEnvs' in pde :
+    runEnvs.update( pde['runEnvs'] )
+  for aRunEnvKey, aRunEnvValue in runEnvs.items() :
+    theRunEnvs = theRunEnvs + " -e \"{}={}\"".format(aRunEnvKey, aRunEnvValue)
 
   theVolumes = ""
   volumes = []
   if 'volumes' in pde :
     volumes = pde['volumes']
+  xsock = "/tmp/.X11-unix"
   volumes.append("{}:{}".format(xsock, xsock))
   volumes.append("{}:/common".format(ctx.obj['pdeDir']))
   volumes.append("/home/dev/.ssh:/home/dev/.ssh:ro")
-  volumes.append("{}:/tmp/ssh-auth-sock:ro".format(os.getenv('SSH_AUTH_SOCK')))
+  volumeFound = False
+  if sshAuthSockDir :
+    for aVolume in volumes :
+      if sshAuthSockDir in aVolume :
+        volumeFound = True
+        break
+  if not volumeFound :
+    logging.info("Adding sshAuthSockDir [{}]".format(sshAuthSockDir))
+    volumes.append("{}:{}:ro".format(sshAuthSockDir, sshAuthSockDir))
   for aVolume in volumes :
     theVolumes = theVolumes + " -v " + aVolume
     volParts = aVolume.split(':')
@@ -73,14 +94,11 @@ def start(ctx):
       for aCapability in pde['capabilities']['drop'] :
         theCapabilities = theCapabilities + " --cap-drop {}".format(aCapability)
 
-  theRunEnvs = ""
-  runEnvs = {}
-  if 'runEnvs' in pde :
-    runEnvs = pde['runEnvs']
-  runEnvs['DISPLAY']       = "unix:0.0"
-  runEnvs['SSH_AUTH_SOCK'] = "/tmp/ssh-auth-sock"
-  for aRunEnvKey, aRunEnvValue in runEnvs.items() :
-    theRunEnvs = theRunEnvs + " -e \"{}={}\"".format(aRunEnvKey, aRunEnvValue)
+
+  theHosts = ""
+  if 'hosts' in pde :
+    for aHostMap in pde['hosts'] :
+      theHosts = theHosts + " --add-host {}".format(aHostMap)
 
   cmd = """
 podman run -it \
@@ -90,8 +108,7 @@ podman run -it \
   -w "/home/dev" \
   {theDevices} \
   {theCapabilities} \
-  --add-host nn01:10.0.0.1 \
-  --add-host git.perceptisys.co.uk:10.0.0.1 \
+  {theHosts} \
   --hostname {pdeName} \
   --name {pdeName} \
   {imageName}
@@ -100,9 +117,11 @@ podman run -it \
     theRunEnvs      = theRunEnvs,
     theDevices      = theDevices,
     theCapabilities = theCapabilities,
+    theHosts        = theHosts,
     pdeName         = ctx.obj['pdeName'],
     imageName       = ctx.obj['image']['name']
    )
 
+  click.echo("Running {}".format(ctx.obj['pdeName']))
   logging.info("running podman command:\n-----" + cmd + "\n-----")
-  #os.system(cmd)
+  os.system(cmd)

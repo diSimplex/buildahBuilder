@@ -2,6 +2,7 @@
 
 import click
 import pdeCmds
+import os
 
 @pdeCmds.cli.command()
 @click.option('-y', '--yes', is_flag=True, expose_value=True,
@@ -17,5 +18,6 @@ def stop(ctx, yes) :
     try:
       click.echo("Stopping {}".format(ctx.obj['pdeName']))
       os.system("podman container stop {}".format(ctx.obj['pdeName']))
+      os.system("podman container rm {}".format(ctx.obj['pdeName']))
     except:
       pass
