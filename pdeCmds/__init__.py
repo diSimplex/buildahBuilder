@@ -148,7 +148,7 @@ def cli(ctx, pde_name, config_file, verbose):
 
     For details on all other configuration parameters type:
 
-        pde -v <<pdeName>> config
+        pde <<pdeName>> config
   """
   ctx.ensure_object(dict)
   ctx.obj = loadConfig(pde_name, config_file, verbose)

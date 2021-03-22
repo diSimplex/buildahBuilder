@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-
-# This python3 module creates a new pde commons area
+# This python3 click subcommand creates a new pde commons area
 
 import click
 import jinja2
@@ -35,7 +33,10 @@ def create(ctx):
   You can use the local pde configuration file (by default, 'config.yaml' 
   in this directory) to provide additional key/value pairs for use by your 
   Jinja2 templates. 
-  
+
+  NOTE that any Jinja2 expressions used in YAML values MUST be wrapped in 
+  quotes. 
+    
   """
   click.echo("Creating {}".format(ctx.obj['pdeName']))
 

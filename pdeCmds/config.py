@@ -1,14 +1,25 @@
-#!/usr/bin/env python3
-
-# This python3 script starts a pde container
+# This python3 click subcommand lists the configuration of a pde container
 
 import click
 import pdeCmds
+import yaml
   
 @pdeCmds.cli.command()
 @click.pass_context
 def config(ctx):
-  """More details about the various configuration options"""
+  """
+  List the current configuration and global options.
+
+  This command can be used to list the currently known configuration 
+  key/values for a given pde.
+
+  This command can also be used to list (potential) additional global 
+  configuration parameters you might like to specify. 
+  """ 
+
+  if not ctx.obj['verbose'] :
+    print("configuration:\n------\n" + yaml.dump(ctx.obj) + "------\n")
+
   click.echo("""
 The following configuration options can be specified in the global YAML 
 configuraiton file.

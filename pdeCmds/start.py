@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-
-# This python3 script starts a pde container
+# This python3 click subcommand starts a pde container
 
 import click
 import logging
@@ -12,7 +10,21 @@ import yaml
 @pdeCmds.cli.command()
 @click.pass_context
 def start(ctx):
-  """Starts an existing pde container image"""
+  """
+  Starts an existing pde container image.
+
+  This subcommand uses (rootless) podman to run a pde container image.
+
+  It uses the ``pde.yaml`` file (in the "common" area for a given pde) to 
+  describe how to run the pde container image. 
+
+  This ``pde.yaml`` file and the associated "common" area are created by 
+  the ``create`` subcommand. 
+
+  The current values in ``pde.yaml`` file will be listed in the ``pde`` 
+  configuration key which can be found by using the ``config`` subcommand. 
+
+  """
   
   image = {}
   if 'image' in ctx.obj :

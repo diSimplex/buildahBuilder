@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-
-# This python3 module builds a pde container image
+# This python3 click subcommand builds a pde container image
 
 import click
 import logging
@@ -10,7 +8,24 @@ import os
 @pdeCmds.cli.command()
 @click.pass_context
 def build(ctx):
-  """Builds a pde container image"""
+  """
+
+  Build a pde container image.
+
+  This subcommand uses cekit to build a podman conatiner image for a given 
+  pde. 
+
+  The cekit tool uses the ``image.yaml`` YAML file (in the "common" area 
+  for a given pde) to describe how to buile a container. 
+
+  This ``image.yaml`` file and the associated "common" area are created by 
+  the ``create`` subcommand. 
+
+  The current values in ``image.yaml`` file will be listed in the 
+  ``image`` configuration key which can be found by using the ``config`` 
+  subcommand. 
+
+  """
   click.echo("Building {}".format(ctx.obj['pdeName']))
 
   logging.info("Changing directory to: [{}]".format(ctx.obj['pdeDir']))
