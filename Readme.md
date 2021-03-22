@@ -38,6 +38,18 @@ consisting of the following subcommands:
    running pde container. This allows any artifacts used or built inside 
    the pde to be easily accessible from the host. 
 
+   On the host, this "comnon" directory is, by default, 
+   ``~/common/pde/<<pdeName>>``, where ``<<pdeName>>`` is the name of the 
+   pde as specified as the first argument to the ``pde`` command. 
+
+   Inside the running pde, this "common" directory is ``/common``.
+
+   Since the pde is run as a rootless podman container, "root" inside the 
+   container corresponds to the user on the host who started the pde 
+   container. This means that access rights to the files *should* "just 
+   work". This also means that "root" inside the running pde has no more 
+   privileges on the host than the user who started the pde. 
+
    The ``create`` subcommand also uses 
    [Jinja2](https://jinja2docs.readthedocs.io/en/stable/)
    to expand the configuration files in the current working directory 
@@ -109,8 +121,8 @@ the following [YAML](https://en.wikipedia.org/wiki/YAML) files:
     [examples/gccLua/pde.yaml](examples/gccLua/pde.yaml)
     example for a brief description of the (optional) keys. 
 
-In addition the pde ``create`` subcommand uses the following files found 
-in the current working directory: 
+In addition the **pde ``create`` subcommand** uses the following files 
+found in the current working directory: 
 
   - **image.yaml** This file is a
     [Jinja2](https://jinja2docs.readthedocs.io/en/stable/)
@@ -147,3 +159,7 @@ or in the
 **Note** that when using Jinja2 expressions inside a YAML formated file, 
 you *will* need to ensure the whole YAML value which uses Jinja2 
 expressions is wrapped in quotes. 
+
+## Installation
+
+TBD
