@@ -44,42 +44,76 @@ def start(ctx):
   logging.info("(re)creating the commons directory")
   os.makedirs(ctx.obj['pdeDir'], exist_ok=True)
 
-  theRunEnvs = ""
+  ####################################################################
+  # We start by fixing any magic parameters...
+  #
+  if 'user' not in pde :
+    pde['user'] = 'root'
+
+  if 'userDir' not in pde :
+    if pde['user'] == 'root' :
+      pde['userDir'] = '/root'
+    else:
+      pde['userDir'] = '/home/{}'.format(pde['user'])
+
+
   runEnvs = {}
-  runEnvs['DISPLAY'] = "unix:0.0"
-  sshAuthSock    = os.getenv('SSH_AUTH_SOCK')
-  sshAuthSockDir = None
-  if sshAuthSock :
-    runEnvs['SSH_AUTH_SOCK'] = sshAuthSock
-    sshAuthSockDir = os.path.dirname(sshAuthSock)
   if 'runEnvs' in pde :
     runEnvs.update( pde['runEnvs'] )
+  # add in DISPLAY 
+  display =  os.getenv('DISPLAY')
+  if display :
+    runEnvs['DISPLAY'] = display
+  # add in SSH_AUTH_SOCK
+  sshAuthSock     = os.getenv('SSH_AUTH_SOCK')
+  sshAuthSockDir  = None
+  sshAuthSockFile = None
+  if sshAuthSock :
+    runEnvs['SSH_AUTH_SOCK'] = sshAuthSock
+    sshAuthSockDir  = os.path.dirname(sshAuthSock)
+    sshAuthSockFile = os.path.basename(sshAuthSock)
+
+  volumes = []
+  if 'volumes' in pde :
+    volumes = pde['volumes']
+  volumes.append("{}:/common".format(ctx.obj['pdeDir']))
+  hostSSHdir = os.path.expanduser('~/.ssh')
+  if os.path.isdir(hostSSHdir) :
+    volumes.append("{}:{}/.ssh:ro".format(hostSSHdir, pde['userDir']))
+  if sshAuthSockDir :
+    mappedSshAuthSockDir = None
+    for aVolume in volumes :
+      if sshAuthSockDir in aVolume :
+        mappedSshAuthSockDir = aVolume.split(':')[1]
+        break
+    if mappedSshAuthSockDir :
+      if sshAuthSockFile :
+        logging.info("Mapping sshAuthSockDir to [{}]".format(mappedSshAuthSockDir))
+        runEnvs['SSH_AUTH_SOCK'] = os.path.join(mappedSshAuthSockDir, sshAuthSockFile)
+    else :
+      logging.info("Adding sshAuthSockDir [{}]".format(sshAuthSockDir))
+      volumes.append("{}:{}:ro".format(sshAuthSockDir, sshAuthSockDir))
+
+  ####################################################################
+  # Now that we have all of the magic parameters set...
+  # we can build ``the``strings to be used in the run cmd string...
+  
+  theUser = "-u \"{}:{}\"".format(pde['user'], pde['user'])
+  theWorkingDir = ""
+  if 'workingDir' in pde :
+    theWorkingDir = "-w \"{}\"".format(pde['workingDir'])
+  
+  theRunEnvs = ""
   for aRunEnvKey, aRunEnvValue in runEnvs.items() :
     theRunEnvs = theRunEnvs + " -e \"{}={}\"".format(aRunEnvKey, aRunEnvValue)
 
   theVolumes = ""
-  volumes = []
-  if 'volumes' in pde :
-    volumes = pde['volumes']
-  xsock = "/tmp/.X11-unix"
-  volumes.append("{}:{}".format(xsock, xsock))
-  volumes.append("{}:/common".format(ctx.obj['pdeDir']))
-  volumes.append("/home/dev/.ssh:/home/dev/.ssh:ro")
-  volumeFound = False
-  if sshAuthSockDir :
-    for aVolume in volumes :
-      if sshAuthSockDir in aVolume :
-        volumeFound = True
-        break
-  if not volumeFound :
-    logging.info("Adding sshAuthSockDir [{}]".format(sshAuthSockDir))
-    volumes.append("{}:{}:ro".format(sshAuthSockDir, sshAuthSockDir))
   for aVolume in volumes :
     theVolumes = theVolumes + " -v " + aVolume
     volParts = aVolume.split(':')
-  if not os.path.exists(volParts[0]) :
-    os.makedirs(volParts[0], exist_ok=True)
-  
+    if not os.path.exists(volParts[0]) :
+      os.makedirs(volParts[0], exist_ok=True)
+
   theDevices = ""
   if 'devices' in pde :
     for aDeviceSpec in pde['devices'] :
@@ -94,18 +128,20 @@ def start(ctx):
       for aCapability in pde['capabilities']['drop'] :
         theCapabilities = theCapabilities + " --cap-drop {}".format(aCapability)
 
-
   theHosts = ""
   if 'hosts' in pde :
     for aHostMap in pde['hosts'] :
       theHosts = theHosts + " --add-host {}".format(aHostMap)
 
+  ####################################################################
+  # We can now assemble the run cmd string...
+  #
   cmd = """
 podman run -it \
   {theVolumes} \
   {theRunEnvs} \
-  -u "dev:dev" \
-  -w "/home/dev" \
+  {theUser} \
+  {theWorkingDir} \
   {theDevices} \
   {theCapabilities} \
   {theHosts} \
@@ -118,10 +154,15 @@ podman run -it \
     theDevices      = theDevices,
     theCapabilities = theCapabilities,
     theHosts        = theHosts,
+    theUser         = theUser,
+    theWorkingDir   = theWorkingDir,
     pdeName         = ctx.obj['pdeName'],
     imageName       = ctx.obj['image']['name']
    )
 
+  ####################################################################
+  # Now do it!
+  #
   click.echo("Running {}".format(ctx.obj['pdeName']))
   logging.info("running podman command:\n-----" + cmd + "\n-----")
   os.system(cmd)
