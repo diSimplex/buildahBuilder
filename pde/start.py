@@ -146,7 +146,9 @@ podman run -it \
   {theHosts} \
   --hostname {pdeName} \
   --name {pdeName} \
-  {imageName}
+  --detach=true \
+  {imageName} \
+  sleep infinity
 """.rstrip().format(
     theVolumes      = theVolumes,
     theRunEnvs      = theRunEnvs,

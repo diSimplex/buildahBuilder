@@ -156,6 +156,18 @@ def cli(ctx, pde_name, config_file, verbose):
   """
     PDE_NAME is the name of the pde container on which subsequent commands will work.
 
+    The pde subcommands (listed below) come in a number of pairs:
+
+      config : used to view the configuration parameters as seen by pde,
+
+      create/destroy : used to manage the "common" area as well as image and pde descriptions,
+
+      build/remove : used to manage the podman images used by a running container, 
+
+      start/stop : used to manage the running container used for development, 
+
+      enter : used to enter an already running conainter using the configured shell [default=bash] (this command may be used multiple times). 
+
     For details on all other configuration parameters type:
 
         pde <<pdeName>> config
