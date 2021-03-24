@@ -2,10 +2,9 @@
 
 import click
 import logging
-import pdeCmds
 import os
 
-@pdeCmds.cli.command()
+@click.command()
 @click.pass_context
 def build(ctx):
   """

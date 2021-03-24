@@ -6,6 +6,15 @@ import os
 import sys
 import yaml
 
+import pde.build
+import pde.config
+import pde.create
+import pde.destroy
+import pde.enter
+import pde.remove
+import pde.start
+import pde.stop
+
 ########################################################################
 # Handle configuration
 
@@ -153,3 +162,12 @@ def cli(ctx, pde_name, config_file, verbose):
   """
   ctx.ensure_object(dict)
   ctx.obj = loadConfig(pde_name, config_file, verbose)
+
+cli.add_command(pde.build.build)
+cli.add_command(pde.config.config)
+cli.add_command(pde.create.create)
+cli.add_command(pde.destroy.destroy)
+cli.add_command(pde.enter.enter)
+cli.add_command(pde.remove.remove)
+cli.add_command(pde.start.start)
+cli.add_command(pde.stop.stop)

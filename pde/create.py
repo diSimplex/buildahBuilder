@@ -4,7 +4,6 @@ import click
 import jinja2
 import logging
 import os
-import pdeCmds
 import shutil
 
 def renderTemplate(ctx, fileName) :
@@ -17,7 +16,7 @@ def renderTemplate(ctx, fileName) :
     logging.error("Could not render the Jinja2 template [{}]".format(fileName))
     logging.error(err)
 
-@pdeCmds.cli.command()
+@click.command("create")
 @click.pass_context
 def create(ctx):
   """

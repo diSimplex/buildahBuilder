@@ -1,10 +1,9 @@
 # This python3 click subcommand destroys the common area for a given pde
 
 import click
-import pdeCmds
 import shutil
 
-@pdeCmds.cli.command()
+@click.command("destroy")
 @click.option('-y', '--yes', is_flag=True, expose_value=True,
   help="Confirms that you want to delete this pde.",
   prompt="Are you sure you want to delete this pde?")

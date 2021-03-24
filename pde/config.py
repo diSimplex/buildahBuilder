@@ -1,10 +1,9 @@
 # This python3 click subcommand lists the configuration of a pde container
 
 import click
-import pdeCmds
 import yaml
   
-@pdeCmds.cli.command()
+@click.command()
 @click.pass_context
 def config(ctx):
   """

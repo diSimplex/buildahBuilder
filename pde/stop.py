@@ -1,10 +1,9 @@
 # This python3 click subcommand stops a running pde container
 
 import click
-import pdeCmds
 import os
 
-@pdeCmds.cli.command()
+@click.command("stop")
 @click.option('-y', '--yes', is_flag=True, expose_value=True,
   help="Confirms that you want to stop this container.",
   prompt='Are you sure you want to stop the container?')

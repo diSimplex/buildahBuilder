@@ -3,11 +3,10 @@
 import click
 import logging
 import os
-import pdeCmds
 import sys
 import yaml
 
-@pdeCmds.cli.command()
+@click.command("start")
 @click.pass_context
 def start(ctx):
   """

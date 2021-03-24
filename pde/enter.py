@@ -3,10 +3,9 @@
 import click
 import logging
 import os
-import pdeCmds
 import sys
 
-@pdeCmds.cli.command()
+@click.command("enter")
 @click.pass_context
 def enter(ctx) :
   """

@@ -2,10 +2,9 @@
 
 import click
 import logging
-import pdeCmds
 import os
 
-@pdeCmds.cli.command()
+@click.command("remove")
 @click.option('-y', '--yes', is_flag=True, expose_value=True, 
   help="Confirms that you want to remove this container image.",
   prompt="Are you sure you want to remove the container image?")
