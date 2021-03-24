@@ -174,19 +174,19 @@ To install PodmanDevelopmentEnvironments (pde) you must install:
    distributions will need to install CEKit directly from the [git 
    repository](https://github.com/cekit/cekit) using the commands:
 
-```
+   ```
      sudo apt install libkrb5-dev
      pip install git+https://github.com/cekit/cekit.git
-```
+   ```
 
    If you want CEKit installed for all users, you will need to append 
    ``sudo`` at the begining of the command line above. 
 
 3. **PodmanDevelopmentEnvironments (pde)** itself by using the command:
 
-```
+   ```
      pip install git+https://github.com/stephengaito/podmanDevelopmentEnvironments.git
-```
+   ```
 
    Again, if you want pde to be installed for all users, you will need to 
    append ``sudo`` at the begining of the command line above.
