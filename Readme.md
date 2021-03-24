@@ -182,3 +182,11 @@ To install PodmanDevelopmentEnvironments (pde) you must install:
    If you want CEKit installed for all users, you will need to append 
    ``sudo`` at the begining of the command line above. 
 
+3. **PodmanDevelopmentEnvironments (pde)** itself by using the command:
+
+```
+     pip install git+https://github.com/stephengaito/podmanDevelopmentEnvironments.git
+```
+
+   Again, if you want pde to be installed for all users, you will need to 
+   append ``sudo`` at the begining of the command line above.
