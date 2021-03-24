@@ -162,4 +162,23 @@ expressions is wrapped in quotes.
 
 ## Installation
 
-TBD
+To install PodmanDevelopmentEnvironments (pde) you must install:
+
+1. **Podman** by following the [Podman installation 
+   instructions](https://podman.io/getting-started/installation) 
+
+2. **CEKit** by following the [CEKit installation 
+   instructions](https://docs.cekit.io/en/latest/handbook/installation/instructions.html) 
+
+   **NOTE** until CEKit version 3.10 is released, users on Debian based 
+   distributions will need to install CEKit directly from the [git 
+   repository](https://github.com/cekit/cekit) using the commands:
+
+```
+     sudo apt install libkrb5-dev
+     pip install git+https://github.com/cekit/cekit.git
+```
+
+   If you want CEKit installed for all users, you will need to append 
+   ``sudo`` at the begining of the command line above. 
+
