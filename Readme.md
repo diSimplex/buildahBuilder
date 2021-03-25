@@ -28,12 +28,14 @@ on each compile host.
 PodmanDevelopmentEnvironments (pde) is a "single" Python command line tool 
 consisting of the following subcommands:
 
-0. **config:** This subcommnd lists the current configuration as seen by 
+1. **config:** This subcommnd lists the current configuration as seen by 
    the ``pde`` command. It also provides some additional help 
    documentation on the various configuration parameters which can be 
    specified in the configuration YAML.
 
-1. **create:** This subcommand creates the "common" development area used 
+   ----
+   
+2. **create:** This subcommand creates the "common" development area used 
    by a given pde. This area is common to both the host as well as the 
    running pde container. This allows any artifacts used or built inside 
    the pde to be easily accessible from the host. 
@@ -58,10 +60,12 @@ consisting of the following subcommands:
    these configuration files, allows you to keep parameters which are 
    common to the various configuration files in one place. 
 
-2. **destroy:** This subcommand destroys the "common" development area 
+3. **destroy:** This subcommand destroys the "common" development area 
    created by the ``create`` subcommand. 
 
-3. **build:** This subcommand uses ``cekit`` to build the podman image 
+   ----
+   
+4. **build:** This subcommand uses ``cekit`` to build the podman image 
    used by the pde.
 
    We use a cekit YAML description to specify what tools and libraries 
@@ -69,14 +73,16 @@ consisting of the following subcommands:
    make use of cekit's modules to allow the overall description of a given 
    pde to (re)use descriptions of composable sub-parts. 
 
-4. **remove:** This subcommand removes any existing podman image 
+5. **remove:** This subcommand removes any existing podman image 
    associcated with a given pde. 
 
-5. **start:** This subcommand starts a pde using (rootless) podman.
+   ----
+   
+6. **start:** This subcommand starts a pde using (rootless) podman.
 
-6. **stop:** This subcommand stops a running pde.
+7. **stop:** This subcommand stops a running pde.
 
-7. **enter:** This subcommand opens a shell inside a running pde. You may 
+8. **enter:** This subcommand opens a shell inside a running pde. You may 
    use this command multiple times to have a number of concurrent shells 
    running inside the pde at the same time. 
 
@@ -87,7 +93,9 @@ consisting of the following subcommands:
    the pde will have read-only access to these credentials as well. This 
    means that, for example, ssh access to GitHub should work. 
 
-8. **run:** This subcommand starts a container, runs the command provided 
+   ----
+   
+9. **run:** This subcommand starts a container, runs the command provided 
    and then stops and removes the container. 
 
 ## Configuration
@@ -184,17 +192,13 @@ To install PodmanDevelopmentEnvironments (pde) you must install:
 2. **CEKit** by following the [CEKit installation 
    instructions](https://docs.cekit.io/en/latest/handbook/installation/instructions.html) 
 
-   **NOTE** until CEKit version 3.10 is released, users on Debian based 
-   distributions will need to install CEKit directly from the [git 
-   repository](https://github.com/cekit/cekit) using the commands:
+   **NOTE** Users on Debian based distros will need to have the
+   ``libkrb5-dev`` package installed *before* installing CEKit.
+   You can do this using the commands:
 
    ```
      sudo apt install libkrb5-dev
-     pip install git+https://github.com/cekit/cekit.git
    ```
-
-   If you want CEKit installed for all users, you will need to append 
-   ``sudo`` at the begining of the command line above. 
 
 3. **PodmanDevelopmentEnvironments (pde)** itself by using the command:
 

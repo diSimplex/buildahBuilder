@@ -1,6 +1,7 @@
 # This python3 click subcommand creates a new pde commons area
 
 import click
+import glob
 import jinja2
 import logging
 import os
@@ -44,8 +45,9 @@ def create(ctx):
   Creates a new pde enviroment.
 
   This command creates the `common` directory associated with this pde and 
-  then expands the Readme.md, image.yaml and pde.yaml files using the 
-  Jinja2 template engine, copying the results to the pde common directory. 
+  then expands the Readme.md, and any `*.yaml` files in the current 
+  directory using the Jinja2 template engine, copying the results to the 
+  pde common directory. 
 
   The Jinja2 templates have access to all configuration values which will 
   be reported by using the `--verbose` command line switch. 
@@ -63,8 +65,9 @@ def create(ctx):
   logging.info("(re)creating the commons directory")
   os.makedirs(ctx.obj['pdeDir'], exist_ok=True)
 
-  logging.info("expanding the Readme.md, image and pde yaml files using Jinja2")
-
+  logging.info("expanding Readme.md using Jinja2")
   renderTemplate(ctx, "Readme.md")  
-  renderTemplate(ctx, "image.yaml")
-  renderTemplate(ctx, "pde.yaml")
+
+  for aYamlFileName in glob.glob("*.yaml", recursive=True) :
+    logging.info("expanding {} using Jinja2".format(aYamlFileName))
+    renderTemplate(ctx, aYamlFileName)

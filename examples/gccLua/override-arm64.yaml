@@ -1,0 +1,8 @@
+# This CEKit override file specifies the correct release urls for use on 
+# Raspberry pi 4s 
+
+schema_version: 1
+artifacts:
+  - name: micro
+    url: https://github.com/zyedidia/micro/releases/download/v2.0.8/micro-2.0.8-linux-arm64.tar.gz
+    target: micro.tar

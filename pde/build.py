@@ -5,8 +5,10 @@ import logging
 import os
 
 @click.command()
+@click.option("-o", "--override", default=None,
+  help="Specify an override file to be used during the build.")
 @click.pass_context
-def build(ctx):
+def build(ctx, override):
   """
 
   Build a pde container image.
@@ -39,6 +41,9 @@ def build(ctx):
   cmdParts.append("--config")
   cmdParts.append(ctx.obj['cekitConfig'])
   cmdParts.append("build")
+  if override is not None :
+    cmdParts.append("--overrides-file")
+    cmdParts.append(override)
   cmdParts.append("podman")
   cmd = " ".join(cmdParts)
 
