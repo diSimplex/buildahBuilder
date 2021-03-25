@@ -13,7 +13,7 @@ import pde.create
 import pde.destroy
 import pde.enter
 import pde.remove
-import pde.start
+import pde.startRun
 import pde.stop
 
 ########################################################################
@@ -192,5 +192,6 @@ cli.add_command(pde.create.create)
 cli.add_command(pde.destroy.destroy)
 cli.add_command(pde.enter.enter)
 cli.add_command(pde.remove.remove)
-cli.add_command(pde.start.start)
+cli.add_command(pde.startRun.start)
+cli.add_command(pde.startRun.run)
 cli.add_command(pde.stop.stop)

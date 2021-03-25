@@ -16,6 +16,7 @@ packages:
     - git
     - make
     - cmake
+    - less
     - pkg-config
     - dh-autoreconf
     - doxygen

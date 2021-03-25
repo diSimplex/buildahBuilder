@@ -6,25 +6,7 @@ import os
 import sys
 import yaml
 
-@click.command("start")
-@click.pass_context
-def start(ctx):
-  """
-  Starts an existing pde container image.
-
-  This subcommand uses (rootless) podman to run a pde container image.
-
-  It uses the ``pde.yaml`` file (in the "common" area for a given pde) to 
-  describe how to run the pde container image. 
-
-  This ``pde.yaml`` file and the associated "common" area are created by 
-  the ``create`` subcommand. 
-
-  The current values in ``pde.yaml`` file will be listed in the ``pde`` 
-  configuration key which can be found by using the ``config`` subcommand. 
-
-  """
-  
+def compileCmd(ctx, workDir, cmdArgs):
   image = {}
   if 'image' in ctx.obj and ctx.obj['image'] :
     image = ctx.obj['image']
@@ -38,7 +20,6 @@ def start(ctx):
   else :
     logging.error("No pde description found ... can not start pde!")
     sys.exit(-1)
-
 
   logging.info("(re)creating the commons directory")
   os.makedirs(ctx.obj['pdeDir'], exist_ok=True)
@@ -55,6 +36,8 @@ def start(ctx):
     else:
       pde['userDir'] = '/home/{}'.format(pde['user'])
 
+  if workDir is not None :
+    pde['workingDir'] = workDir
 
   runEnvs = {}
   if 'runEnvs' in pde :
@@ -132,11 +115,18 @@ def start(ctx):
     for aHostMap in pde['hosts'] :
       theHosts = theHosts + " --add-host {}".format(aHostMap)
 
+  detachedStr = "--detach=true"
+  cmdStr      = "sleep infinity"
+  if cmdArgs is not None :
+    detachedStr = "-it"
+    cmdStr      = " ".join(cmdArgs)
+    
   ####################################################################
   # We can now assemble the run cmd string...
   #
   cmd = """
-podman run -it \
+podman run \
+  {detachedStr} \
   {theVolumes} \
   {theRunEnvs} \
   {theUser} \
@@ -146,10 +136,10 @@ podman run -it \
   {theHosts} \
   --hostname {pdeName} \
   --name {pdeName} \
-  --detach=true \
   {imageName} \
-  sleep infinity
+  {cmdStr}
 """.rstrip().format(
+    detachedStr     = detachedStr,
     theVolumes      = theVolumes,
     theRunEnvs      = theRunEnvs,
     theDevices      = theDevices,
@@ -158,12 +148,88 @@ podman run -it \
     theUser         = theUser,
     theWorkingDir   = theWorkingDir,
     pdeName         = ctx.obj['pdeName'],
-    imageName       = ctx.obj['image']['name']
-   )
+    imageName       = ctx.obj['image']['name'],
+    cmdStr          = cmdStr
+  )
+  return cmd
 
+@click.command("start")
+@click.pass_context
+def start(ctx):
+  """
+  Starts an existing pde container image in the background.
+
+  This subcommand uses (rootless) podman to run a pde container image.
+
+  It uses the ``pde.yaml`` file (in the "common" area for a given pde) to 
+  describe how to run the pde container image. 
+
+  This ``pde.yaml`` file and the associated "common" area are created by 
+  the ``create`` subcommand. 
+
+  The current values in ``pde.yaml`` file will be listed in the ``pde`` 
+  configuration key which can be found by using the ``config`` subcommand. 
+
+  """
+  cmd = compileCmd(ctx, None, None)
+  
+  ####################################################################
+  # Now do it!
+  #
+  click.echo("Starting {}".format(ctx.obj['pdeName']))
+  logging.info("using podman command:\n-----" + cmd + "\n-----")
+  os.system(cmd)
+
+@click.command("run")
+@click.option("-w", "--work-dir", default=None,
+  help="The working directory in which to run the command.")
+@click.argument("cmd_args", nargs=-1, required=True)
+@click.pass_context
+def run(ctx, work_dir, cmd_args):
+  """
+  Runs an existing pde container image using the CMD_ARGS command line arguments.
+
+  This subcommand uses (rootless) podman to run a pde container image.
+
+  It uses the ``pde.yaml`` file (in the "common" area for a given pde) to 
+  describe how to run the pde container image. 
+
+  This ``pde.yaml`` file and the associated "common" area are created by 
+  the ``create`` subcommand. 
+
+  The current values in ``pde.yaml`` file will be listed in the ``pde`` 
+  configuration key which can be found by using the ``config`` subcommand.
+
+  NOTE: if your CMD_ARGS contain ``-`` or ``--`` options, then you will 
+  need to use the ``--`` "option" after the run options and before the 
+  CMD_ARGS. For example:
+
+    pde cpDev run -- lua -v
+
+  or
+
+    pde cpDev run --work-dir /usr/local/src/lua -- /common/test
+
+  where ``test`` is a shell script in the ~/common/pde/cpDev directory
+  on the host (and the /common directory inside the container).
+
+  """
+  cmd = compileCmd(ctx, work_dir, cmd_args)
+  
   ####################################################################
   # Now do it!
   #
   click.echo("Running {}".format(ctx.obj['pdeName']))
-  logging.info("running podman command:\n-----" + cmd + "\n-----")
+
+  if work_dir is not None :
+    logging.info("Using the [{}] working directory".format(work_dir))
+    
+  logging.info("using podman command:\n-----" + cmd + "\n-----")
+  click.echo("\n---------------------------------------------------")
   os.system(cmd)
+  click.echo("---------------------------------------------------\n")
+  
+  click.echo("Stopping {}".format(ctx.obj['pdeName']))
+  os.system("podman container stop {}".format(ctx.obj['pdeName']))
+  os.system("podman container rm {}".format(ctx.obj['pdeName']))
+

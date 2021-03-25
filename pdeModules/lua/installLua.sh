@@ -21,7 +21,6 @@ extractTarFile lua     lua.tar.gz
 make
 make install
 cd /usr/local/lib
-ln -s liblua.so.5.4.1 liblua5.4.so
 
 extractTarFile luaFileSystem     luaFileSystem.tar.gz
 make
