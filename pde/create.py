@@ -6,10 +6,31 @@ import logging
 import os
 import shutil
 
+
 def renderTemplate(ctx, fileName) :
+  def j2_lookup_filter(value, tableName) :
+    """
+      Uses the filter provided value as a key to a result value in a dictionary.
+    """
+    if tableName not in ctx.obj :
+      raise Exception("Lookup filter: There is no dictionary named {}".format(tableName))
+      
+    theTable = ctx.obj[tableName]
+
+    if type(theTable) is not dict :
+      raise Exception("Lookup filter: {} is not a dictionary".format(tableName))
+
+    if value not in theTable :
+      raise Exception("Lookup filter: The value [{}] is not in the dictionary {}".format(value, tableName))
+
+    return theTable[value]
+
+  tmplEnv = jinja2.Environment()
+  tmplEnv.filters['lookup'] = j2_lookup_filter
+  
   try: 
     with open(fileName, 'r') as inFile :
-      template = jinja2.Template(inFile.read())
+      template = tmplEnv.from_string(inFile.read())
     with open(os.path.join(ctx.obj['pdeDir'], fileName), 'w') as outFile :
       outFile.write(template.render(ctx.obj))
   except Exception as err:

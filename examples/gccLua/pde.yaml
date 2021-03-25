@@ -82,3 +82,8 @@
 #hosts:
 #  - host01:10.0.0.1
 #  - host02:10.0.0.2
+
+# The following is a example use of the jinja2/pde 'lookup' filter.
+#
+exampleUseOfLookup:
+  example1: "{{ exampleKeyValue | lookup('exampleLookupTable') }}"

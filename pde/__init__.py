@@ -3,6 +3,7 @@
 import click
 import logging
 import os
+import platform
 import sys
 import yaml
 
@@ -77,13 +78,13 @@ def loadConfig(pdeName, configPath, verbose):
   if verbose is not None :
     config['verbose'] = verbose
 
-  # Now sanitize any known configurable paths
   if configPath is not None :
     config['configPath'] = configPath
   else:
     print("ERROR: a configPath must be specified!")
     sys.exit(-1)
   
+  # Now sanitize any known configurable paths
   sanitizeFilePath(config, 'configPath', None)
   config['configDir'] = os.path.dirname(configPath)
   sanitizeFilePath(config, 'cekitConfig', config['configDir'])
@@ -129,6 +130,16 @@ def loadConfig(pdeName, configPath, verbose):
       print("\t" + "\n\t".join(str(e).split('\n')))
       print("\tDid you remember to wrap all YAML values\n\twith Jinja2 variables in quotes?")
 
+  # Now add in platform parameters
+  thePlatform = {}
+  thePlatform['system']    = platform.system()
+  thePlatform['node']      = platform.node()
+  thePlatform['release']   = platform.release()
+  thePlatform['version']   = platform.version()
+  thePlatform['machine']   = platform.machine()
+  thePlatform['processor'] = platform.processor()
+  config['platform']       = thePlatform
+  
   # Setup logging
   if config['verbose'] :
     logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)

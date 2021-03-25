@@ -148,6 +148,17 @@ In all cases the Jinja2 templates can use any key/values found in the
 current configuration. You can use the pde ``config`` command to list this 
 current configuration as seen by the ``pde`` command(s). 
 
+We have added a ``lookup`` Jinja2 filter which takes the name of a table 
+in the configuration and returns the looked up value in the table. See the 
+[example/gccLua/config.yaml](examples/gccLua/config.yaml) and 
+[example/gccLua/pde.yaml](examples/gccLua/pde.yaml) files for an example
+of how to use the ``lookup`` filter. 
+
+We have also added the results of the Python ``platform`` library to the 
+configuration. Together with the ``lookup`` filter, this allows you to 
+provide a flexible naming system for, for example, CEKit artifacts in your 
+``image.yaml`` CEKit description. 
+
 Similarly, in all cases the YAML format we use is spcified by the 
 ``pyyaml`` python module. Documentation for this module can be found
 [here](https://pyyaml.org/wiki/PyYAMLDocumentation).

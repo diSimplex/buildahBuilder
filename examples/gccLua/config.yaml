@@ -1,3 +1,15 @@
 # Local YAML configuraiton parameters for use in Jinja2 templates in this 
 # directory. 
 
+# The following is an example use of the jinja2/pde 'lookup' filter.
+#
+# To use the 'lookup' filter we need to provide a lookup table:
+#
+exampleLookupTable:
+  key1: value1
+  key2: value2
+  key3: value3
+#
+# And an example key value
+#
+exampleKeyValue: key1
