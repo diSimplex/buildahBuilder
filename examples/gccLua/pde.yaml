@@ -75,6 +75,11 @@
 #  drop:
 #    - aCapabilityToDrop
 
+# The ports is a list of ``--publish`` specifications which will be used 
+# to publish a container's ports to the host. 
+#ports:
+#  - 127.0.0.1:8080:80
+
 # The hosts is a list of ``--add-host`` specifications which will be added 
 # to the ``/etc/hosts`` file inside the container. It can be used to 
 # explicitly add the most important hosts in your network.

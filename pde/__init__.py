@@ -15,6 +15,7 @@ import pde.enter
 import pde.remove
 import pde.startRun
 import pde.stop
+import pde.lists
 
 ########################################################################
 # Handle configuration
@@ -195,3 +196,5 @@ cli.add_command(pde.remove.remove)
 cli.add_command(pde.startRun.start)
 cli.add_command(pde.startRun.run)
 cli.add_command(pde.stop.stop)
+cli.add_command(pde.lists.images)
+cli.add_command(pde.lists.containers)

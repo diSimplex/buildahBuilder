@@ -110,6 +110,11 @@ def compileCmd(ctx, workDir, cmdArgs):
       for aCapability in pde['capabilities']['drop'] :
         theCapabilities = theCapabilities + " --cap-drop {}".format(aCapability)
 
+  thePorts = ""
+  if 'ports' in pde :
+    for aPortMap in pde['ports'] :
+      thePorts = thePorts + " --publish={}".format(aPortMap)
+
   theHosts = ""
   if 'hosts' in pde :
     for aHostMap in pde['hosts'] :
@@ -133,6 +138,7 @@ podman run \
   {theWorkingDir} \
   {theDevices} \
   {theCapabilities} \
+  {thePorts} \
   {theHosts} \
   --hostname {pdeName} \
   --name {pdeName} \
@@ -144,6 +150,7 @@ podman run \
     theRunEnvs      = theRunEnvs,
     theDevices      = theDevices,
     theCapabilities = theCapabilities,
+    thePorts        = thePorts,
     theHosts        = theHosts,
     theUser         = theUser,
     theWorkingDir   = theWorkingDir,

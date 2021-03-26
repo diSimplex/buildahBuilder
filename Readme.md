@@ -73,16 +73,21 @@ consisting of the following subcommands:
    make use of cekit's modules to allow the overall description of a given 
    pde to (re)use descriptions of composable sub-parts. 
 
-5. **remove:** This subcommand removes any existing podman image 
+5. **images:** This subcommand lists all images associated with the pde.
+
+6. **remove:** This subcommand removes any existing podman image 
    associcated with a given pde. 
 
    ----
    
-6. **start:** This subcommand starts a pde using (rootless) podman.
+7. **start:** This subcommand starts a pde using (rootless) podman.
 
-7. **stop:** This subcommand stops a running pde.
+8. **stop:** This subcommand stops a running pde.
 
-8. **enter:** This subcommand opens a shell inside a running pde. You may 
+9. **containers:** This subcommand list all containers associated with the 
+   pde. 
+
+10. **enter:** This subcommand opens a shell inside a running pde. You may 
    use this command multiple times to have a number of concurrent shells 
    running inside the pde at the same time. 
 
@@ -95,7 +100,7 @@ consisting of the following subcommands:
 
    ----
    
-9. **run:** This subcommand starts a container, runs the command provided 
+11. **run:** This subcommand starts a container, runs the command provided 
    and then stops and removes the container. 
 
 ## Configuration
@@ -181,6 +186,21 @@ or in the
 **Note** that when using Jinja2 expressions inside a YAML formated file, 
 you *will* need to ensure the whole YAML value which uses Jinja2 
 expressions is wrapped in quotes. 
+
+## Bash, Zsh and Fish completion scripts
+
+The shellCompletionScripts subdirectory provides Bash, Zsh and Fish 
+completion scripts. 
+
+For Bash and Zsh these completion scripts can be sourced in the 
+respective, ``~/.bashrc``, ``~/zshrc`` startup scripts. 
+
+For Fish this completion script should be placed in the 
+``~/.config/fish/completions`` directory. 
+
+See [Click's Shell Completion 
+documentation](https://click.palletsprojects.com/en/7.x/bashcomplete/#activation-script) 
+for details. 
 
 ## Installation
 
