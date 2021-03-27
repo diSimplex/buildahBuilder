@@ -30,7 +30,7 @@ def build(ctx, override):
   click.echo("Building {}".format(ctx.obj['pdeName']))
 
   logging.info("Changing directory to: [{}]".format(ctx.obj['pdeDir']))
-  os.chdir(ctx.obj['pdeDir'])
+  os.chdir(ctx.obj['pdeWorkDir'])
 
   cmdParts = []
   cmdParts.append("cekit")

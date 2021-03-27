@@ -32,7 +32,7 @@ def renderTemplate(ctx, fileName) :
   try: 
     with open(fileName, 'r') as inFile :
       template = tmplEnv.from_string(inFile.read())
-    with open(os.path.join(ctx.obj['pdeDir'], fileName), 'w') as outFile :
+    with open(os.path.join(ctx.obj['pdeWorkDir'], fileName), 'w') as outFile :
       outFile.write(template.render(ctx.obj))
   except Exception as err:
     logging.error("Could not render the Jinja2 template [{}]".format(fileName))
@@ -63,11 +63,8 @@ def create(ctx):
   click.echo("Creating {}".format(ctx.obj['pdeName']))
 
   logging.info("(re)creating the commons directory")
-  os.makedirs(ctx.obj['pdeDir'], exist_ok=True)
+  os.makedirs(ctx.obj['pdeWorkDir'], exist_ok=True)
 
-  logging.info("expanding Readme.md using Jinja2")
-  renderTemplate(ctx, "Readme.md")  
-
-  for aYamlFileName in glob.glob("*.yaml", recursive=True) :
-    logging.info("expanding {} using Jinja2".format(aYamlFileName))
-    renderTemplate(ctx, aYamlFileName)
+  for aFileName in glob.glob("*", recursive=True) :
+    logging.info("expanding {} using Jinja2".format(aFileName))
+    renderTemplate(ctx, aFileName)

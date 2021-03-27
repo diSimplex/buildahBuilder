@@ -42,10 +42,9 @@ def sanitizeFilePath(config, filePathKey, pathPrefix) :
 
 def loadConfig(pdeName, configPath, verbose):
 
-  # start with the default configuration (above)
+  # Start with the default configuration (above)
   config = defaultConfig
   
-
   # Add the global configuration (if any)
   configPath = os.path.abspath(os.path.expanduser(configPath))
   try:
@@ -92,8 +91,9 @@ def loadConfig(pdeName, configPath, verbose):
 
   sanitizeFilePath(config, 'commonDir', None)
   config['pdeDir'] = os.path.join(config['commonDir'], "pde", config['pdeName'])
-  sanitizeFilePath(config, 'imageYaml', config['pdeDir'])
-  sanitizeFilePath(config, 'pdeYaml', config['pdeDir'])
+  config['pdeWorkDir'] = os.path.join(config['pdeDir'], "pde")
+  sanitizeFilePath(config, 'imageYaml', config['pdeWorkDir'])
+  sanitizeFilePath(config, 'pdeYaml', config['pdeWorkDir'])
   config['curDir'] = os.path.abspath(os.getcwd())
   config['homeDir'] = os.path.expanduser("~")
 
