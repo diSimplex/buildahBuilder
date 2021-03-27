@@ -17,6 +17,5 @@ def stop(ctx, yes) :
     try:
       click.echo("Stopping {}".format(ctx.obj['pdeName']))
       os.system("podman container stop {}".format(ctx.obj['pdeName']))
-      os.system("podman container rm {}".format(ctx.obj['pdeName']))
     except:
       pass

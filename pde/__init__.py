@@ -13,7 +13,8 @@ import pde.create
 import pde.destroy
 import pde.enter
 import pde.remove
-import pde.startRun
+import pde.run
+import pde.start
 import pde.stop
 import pde.lists
 
@@ -180,6 +181,8 @@ def cli(ctx, pde_name, config_file, verbose):
 
       enter : used to enter an already running conainter using the configured shell [default=bash] (this command may be used multiple times). 
 
+      run : used to run a single command in an already running conainter. 
+
     For details on all other configuration parameters type:
 
         pde <<pdeName>> config
@@ -192,9 +195,9 @@ cli.add_command(pde.config.config)
 cli.add_command(pde.create.create)
 cli.add_command(pde.destroy.destroy)
 cli.add_command(pde.enter.enter)
-cli.add_command(pde.remove.remove)
-cli.add_command(pde.startRun.start)
-cli.add_command(pde.startRun.run)
-cli.add_command(pde.stop.stop)
 cli.add_command(pde.lists.images)
 cli.add_command(pde.lists.containers)
+cli.add_command(pde.remove.remove)
+cli.add_command(pde.run.run)
+cli.add_command(pde.start.start)
+cli.add_command(pde.stop.stop)

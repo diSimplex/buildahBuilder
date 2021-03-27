@@ -14,7 +14,7 @@ def images(ctx) :
     image = ctx.obj['image']
     if 'name' in image :
       click.echo("Listing {} images".format(ctx.obj['pdeName']))
-      os.system("podman images --filter reference={}".format(image['name']))
+      os.system("podman images --all --filter reference={}".format(image['name']))
 
 @click.command("containers")
 @click.pass_context
@@ -24,4 +24,4 @@ def containers(ctx) :
   """
 
   click.echo("Listing {} containers".format(ctx.obj['pdeName']))
-  os.system("podman container list --filter name={}".format(ctx.obj['pdeName']))
+  os.system("podman container list --all --filter name={}".format(ctx.obj['pdeName']))

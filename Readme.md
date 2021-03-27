@@ -98,10 +98,8 @@ consisting of the following subcommands:
    the pde will have read-only access to these credentials as well. This 
    means that, for example, ssh access to GitHub should work. 
 
-   ----
-   
-11. **run:** This subcommand starts a container, runs the command provided 
-   and then stops and removes the container. 
+11. **run:** This subcommand runs the command provided inside a running 
+    pde. 
 
 ## Configuration
 
