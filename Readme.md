@@ -88,15 +88,15 @@ consisting of the following subcommands:
    pde. 
 
 10. **enter:** This subcommand opens a shell inside a running pde. You may 
-   use this command multiple times to have a number of concurrent shells 
-   running inside the pde at the same time. 
+    use this command multiple times to have a number of concurrent shells 
+    running inside the pde at the same time. 
 
-   If the host is running Xwindows, then the pde should have access to the 
-   running display from inside the container. 
+    If the host is running Xwindows, then the pde should have access to the 
+    running display from inside the container. 
 
-   If the host user has any ssh credentials in the ``~/.ssh`` directory, 
-   the pde will have read-only access to these credentials as well. This 
-   means that, for example, ssh access to GitHub should work. 
+    If the host user has any ssh credentials in the ``~/.ssh`` directory, 
+    the pde will have read-only access to these credentials as well. This 
+    means that, for example, ssh access to GitHub should work. 
 
 11. **run:** This subcommand runs the command provided inside a running 
     pde. 
