@@ -73,6 +73,13 @@ consisting of the following subcommands:
    make use of cekit's modules to allow the overall description of a given 
    pde to (re)use descriptions of composable sub-parts. 
 
+   The build subcommand takes an optional argument ``--override`` which 
+   can be used to specify a CEKit overrides file for building the image. 
+   If no ``--override`` options is used, but the pde working directory 
+   contains a file named ``override-<<machine>>.yaml`` (where 
+   ``<machine>>`` is the result of the Python ``platform.machine()`` 
+   method), then this file is automatically used as an override file.
+
 5. **images:** This subcommand lists all images associated with the pde.
 
 6. **remove:** This subcommand removes any existing podman image 

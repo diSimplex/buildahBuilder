@@ -19,9 +19,16 @@ def buildCmd(ctx, override):
   cmdParts.append("--config")
   cmdParts.append(ctx.obj['cekitConfig'])
   cmdParts.append("build")
+
   if override is not None :
     cmdParts.append("--overrides-file")
     cmdParts.append(override)
+  else:
+    override = "override-{}.yaml".format(ctx.obj['platform']['machine'])
+    if os.path.isfile(override) :
+      cmdParts.append("--overrides-file")
+      cmdParts.append(override)
+     
   cmdParts.append("podman")
   cmd = " ".join(cmdParts)
   return cmd
@@ -196,6 +203,11 @@ def build(ctx, override):
   The current values in ``image.yaml`` file will be listed in the 
   ``image`` configuration key which can be found by using the ``config`` 
   subcommand. 
+
+  If the ``--override`` option is not specified but the pde working 
+  directory contains a file named ``override-<<machine>>.yaml`` (where 
+  ``<machine>>`` is the result of the Python ``platform.machine()`` 
+  method), then this file is automatically used as an override file. 
 
   This subcommand the uses (rootless) podman to run a pde container in the 
   background. 
