@@ -1,0 +1,25 @@
+# This CEKit module describes how to install the base debian system into a pde
+
+# This module:
+# - assumes a Debian based container,
+
+schema_version: 1
+
+name: base
+version: 1.0
+description: Installs the base debian system
+
+execute:
+  - script: installBase.sh
+
+packages:
+  install:
+    - make
+    - git
+    - tig
+    - wget
+    - curl
+    - ca-certificates
+    - less
+    - nano
+    - tree

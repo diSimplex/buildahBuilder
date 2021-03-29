@@ -232,9 +232,12 @@ def build(ctx, override):
   logging.info("using the cekit command:\n-----\n" + cmd + "\n-----")
   click.echo("------------------------------------------------------------")
   sys.stdout.flush()
-  os.system(cmd)
+  result = os.system(cmd)
   sys.stdout.flush()
   click.echo("------------------------------------------------------------")
+  if result != 0 :
+    click.echo("Building {} FAILED!".format(ctx.obj['pdeName']))
+    sys.exit(-1)
   
   ####################################################################
   # Start the container using the new image!

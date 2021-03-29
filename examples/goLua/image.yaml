@@ -2,9 +2,13 @@
 
 name: "{{ pdeName | lower }}"
 version: 1.0
-description: Create a pde with GCC, micro and Lua installed
+description: Create a pde with GCC, GoLang, NodeJS and Lua installed
 
 from: debian:stable-slim
+
+run:
+  user: root
+  workdir: /root
 
 packages:
   manager: apt-get
@@ -13,5 +17,8 @@ modules:
   repositories:
     - path: "{{ curDir }}/../cekitModules"
   install:
+    - name: base
     - name: gccLang
+    - name: goLang
+    - name: nodeJS
     - name: lua

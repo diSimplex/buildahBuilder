@@ -3,8 +3,8 @@
 # This shell script automates the running of a simple webfsd based webserver 
 # for the Doxygen C documentation
 
-source /common/kvmVars
-source /common/ipAddress
+. $HOME/kvmVars
+. /common/ipAddress
 
 echo ""
 echo "http://$ipAddress:6161/index.html"

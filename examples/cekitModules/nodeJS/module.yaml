@@ -1,0 +1,17 @@
+# This CEKit module describes how to install NodeJS into a pde.
+
+# This module:
+# - assumes a Debian based container,
+
+schema_version: 1
+
+name: nodeJS
+version: 1.0
+description: Adds NodeJS into a Podman development environment
+
+execute:
+  - script: installNodeJS.sh
+
+artifacts:
+  - name: nvmBashrc
+    path: nvmBashrc

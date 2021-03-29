@@ -1,0 +1,94 @@
+# This is a example description of how to start/run a pde
+
+# This ``pde.yaml`` file is used (mostly) by the pde ``start`` subcommand 
+# to customize the ``podman run`` command.
+#
+# See: http://docs.podman.io/en/latest/markdown/podman-run.1.html for 
+# details. 
+
+# The user to be used by default inside the container.
+# This user must have been created by the cekit build step.
+#
+# NOTE: that when using rootless podman, the root user inside the 
+#       container *is* the user who started the container on the
+#       host. 
+#
+#user: root
+
+# When useing "standard" Unix/Linux container images, the "default" home 
+# directories are located in ``/home/<<userName>>``. This ``userDir`` key 
+# can be used to specify a *different* location if needed. 
+#
+# NOTE: is this ``userDir`` key is not explicitly specified, the start 
+#       subcommand will use the "standard" locations.
+#
+#userDir: /root
+
+# The default working directory inside the container.
+#
+# NOTE: it this value is not explicitly specified, then the working 
+#       directory will be the default working directory for the image.
+#
+#workingDir: /root
+
+# The runEnvs is a hash/dictionary of key/value pairs which will be added 
+# as environment varialbes inside the container when it starts up.
+#
+# NOTE: the start subcommand automatically adds:
+#       - DISPLAY copied from the host environment
+#       - SSH_AUTH_SOCK copied from the host environment
+#runEnvs:
+#  TEST_ENV: a test value
+
+# The volumes is a list of ``-v`` style docker/podman volume assignments 
+# which will be used by the pde ``start`` subcommand when starting the 
+# container. 
+#
+# NOTE: if a file/directory does not exist on the host, it will be created 
+#       (as a directory) before being bound into the container.
+#
+# NOTE: the start subcommand will automatically map the ``pdeDir`` on the 
+#       host to the ``/common`` directory inside the container.
+#
+# NOTE: If the host user has a ``~/.ssh`` directory, then the start 
+#       subcommand will automatically map the host ``~/.ssh`` directory to 
+#       the ``pde['userDir']/.ssh`` directory inside the container. This 
+#       ensures the host user's ssh credentials can be used (read-only) 
+#       inside the container. 
+#
+#volumes:
+#  # the following voluve can be used if the host XWindows uses a unix socket.
+#  - /tmp/.X11-unix:/tmp/.X11-unix 
+
+# The devices is a list of docker/podman device specifications to be used 
+# when starting a container. 
+#
+# devices:
+#  - aHostDevice:aContainerDevice:options
+
+# The capabilites.add and capabilities.drop keys are lists of Linux 
+# capabilities to add or drop. These are used when the container is 
+# started. 
+#capabilities:
+#  add:
+#    - aCapabilityToAdd  
+#  drop:
+#    - aCapabilityToDrop
+
+# The ports is a list of ``--publish`` specifications which will be used 
+# to publish a container's ports to the host. 
+#ports:
+#  - 127.0.0.1:8080:80
+
+# The hosts is a list of ``--add-host`` specifications which will be added 
+# to the ``/etc/hosts`` file inside the container. It can be used to 
+# explicitly add the most important hosts in your network.
+#
+#hosts:
+#  - host01:10.0.0.1
+#  - host02:10.0.0.2
+
+# The following is a example use of the jinja2/pde 'lookup' filter.
+#
+exampleUseOfLookup:
+  example1: "{{ exampleKeyValue | lookup('exampleLookupTable') }}"

@@ -2,7 +2,14 @@
 
 # This shell script installs *static* Lua v5.4 libraries
 
+echo "----------------------------------------------------------------------"
+echo $0
+echo "----------------------------------------------------------------------"
+echo ""
+
 mkdir -p /usr/local/installed
+
+numCores=$(nproc)
 
 extractTarFile() {
   echo "----------------------------------------------------------"
@@ -18,12 +25,12 @@ extractTarFile() {
 }
 
 extractTarFile lua     lua.tar.gz
-make
+make -j $numCores
 make install
 cd /usr/local/lib
 
 extractTarFile luaFileSystem     luaFileSystem.tar.gz
-make
+make -j $numCores
 make install
 
 extractTarFile luaSocket luaSocket.tar.gz
@@ -32,7 +39,7 @@ LUAV=5.4 make linux
 LUAV=5.4 make install
 
 extractTarFile luaCJson  luaCJson.tar.gz
-make
+make -j $numCores
 make install
 make install-extra
 

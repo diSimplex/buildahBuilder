@@ -14,16 +14,19 @@ packages:
     - gcc
     - g++
     - git
+    - tig
     - make
     - cmake
     - less
+    - nano
     - pkg-config
     - dh-autoreconf
     - doxygen
     - webfs
 
 execute:
-  - script: setupGccLang.sh
+  - script: installGccLang.sh
 
 artifacts:
-  - path: codeDocServer
+  - name: codeDocServer
+    path: codeDocServer
