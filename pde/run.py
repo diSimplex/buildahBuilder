@@ -52,10 +52,17 @@ def run(ctx, detached, work_dir, cmd_args):
   if work_dir is not None :
     logging.info("Using the [{}] working directory".format(work_dir))
     pCmd = pCmd + " --workdir {}".format(work_dir)
+
+  shell = os.path.join("/", "bin", "bash")
+  if 'shell' in ctx.obj['pde'] :
+    shell = ctx.obj['pde']['shell']
+
+  shellrc = os.path.join(ctx.obj['homeDir'], ".bashrc")
+  if 'shellrc' in ctx.obj['pde'] :
+    shellrc = ctx.obj['pde']['shellrc']
     
-  pCmd = pCmd + " {} {}".format(ctx.obj['pdeName'], cmdStr)
+  pCmd = pCmd + " {} {} --login --rcfile {} -c \"{}\"".format(ctx.obj['pdeName'], shell, shellrc, cmdStr)
   
-  logging.info("using podman command:\n-----\n" + pCmd + "\n-----")
   try:
     click.echo("Running    {}".format(ctx.obj['pdeName']))
     click.echo("Using cmd: [{}]".format(cmdStr))
