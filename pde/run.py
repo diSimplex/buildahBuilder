@@ -7,11 +7,13 @@ import sys
 import yaml
   
 @click.command("run")
+@click.option("-d", "--detached", is_flag=True,
+  help="Run the command in a detached background.")
 @click.option("-w", "--work-dir", default=None,
   help="The working directory in which to run the command.")
 @click.argument("cmd_args", nargs=-1, required=True)
 @click.pass_context
-def run(ctx, work_dir, cmd_args):
+def run(ctx, detached, work_dir, cmd_args):
   """
   Runs a single command inside a running pde container.
 
@@ -39,13 +41,21 @@ def run(ctx, work_dir, cmd_args):
   cmdStr = " ".join(cmd_args)
 
 
-  pCmd = "podman exec -it"
+  pCmd = "podman exec"
+  
+  if detached :
+    logging.info("Running in detached background mode.")
+    pCmd = pCmd + " --detach"
+  else :
+    pCmd = pCmd + " -it"
+
   if work_dir is not None :
     logging.info("Using the [{}] working directory".format(work_dir))
     pCmd = pCmd + " --workdir {}".format(work_dir)
+    
   pCmd = pCmd + " {} {}".format(ctx.obj['pdeName'], cmdStr)
   
-  logging.info("using podman command:\n-----" + pCmd + "\n-----")
+  logging.info("using podman command:\n-----\n" + pCmd + "\n-----")
   try:
     click.echo("Running    {}".format(ctx.obj['pdeName']))
     click.echo("Using cmd: [{}]".format(cmdStr))
