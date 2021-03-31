@@ -44,10 +44,10 @@ def create(ctx):
   """
   Creates a new pde enviroment.
 
-  This command creates the `common` directory associated with this pde and 
+  This command creates the `commons` directory associated with this pde and 
   then expands the Readme.md, and any `*.yaml` files in the current 
   directory using the Jinja2 template engine, copying the results to the 
-  pde common directory. 
+  pde commons directory. 
 
   The Jinja2 templates have access to all configuration values which will 
   be reported by using the `--verbose` command line switch. 

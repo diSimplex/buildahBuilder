@@ -21,8 +21,8 @@ recordVar PATH "/usr/local/go/bin:\$PATH"
 
 go version
 
-mkdir -p /common/go
+mkdir -p /commons/go
 
-recordVar GOPATH /common/go
-recordVar GOBIN /common/bin
+recordVar GOPATH /commons/go
+recordVar GOBIN /commons/bin
 recordVar PATH \$GOBIN:\$GOPATH/bin:/usr/local/go/bin:\$PATH

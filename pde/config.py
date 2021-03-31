@@ -35,12 +35,12 @@ have their command line switches listed in brackets.
 
 --------------------------------------------------------------------------
 
-commonDir:
+commonsDir:
 
-    The path to the common directories mounted inside each pde container 
-    as `/common`. This path is as it will be found on the host machine, 
+    The path to the commons directories mounted inside each pde container 
+    as `/commons`. This path is as it will be found on the host machine, 
     and may be either absolute or relative to the user's home directory 
-    (~/common). 
+    (~/commons). 
 
 imageYaml:
 

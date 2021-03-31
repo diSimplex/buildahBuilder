@@ -1,4 +1,4 @@
-# This python3 click subcommand destroys the common area for a given pde
+# This python3 click subcommand destroys the commons area for a given pde
 
 import click
 import shutil
@@ -10,7 +10,7 @@ import shutil
 @click.pass_context
 def destroy(ctx, yes) :
   """
-  Remove the common area for a given pde.
+  Remove the commons area for a given pde.
   """
 
   if yes :

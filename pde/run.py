@@ -28,10 +28,10 @@ def run(ctx, detached, work_dir, cmd_args):
 
   or
 
-    pde cpDev run --work-dir /usr/local/src/lua -- /common/test
+    pde cpDev run --work-dir /usr/local/src/lua -- /commons/test
 
-  where ``test`` is a shell script in the ~/common/pde/cpDev directory
-  on the host (and the /common directory inside the container).
+  where ``test`` is a shell script in the ~/commons/pde/cpDev directory
+  on the host (and the /commons directory inside the container).
 
   """
   if cmd_args is None :

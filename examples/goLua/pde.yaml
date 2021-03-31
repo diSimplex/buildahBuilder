@@ -48,7 +48,7 @@
 #       (as a directory) before being bound into the container.
 #
 # NOTE: the start subcommand will automatically map the ``pdeDir`` on the 
-#       host to the ``/common`` directory inside the container.
+#       host to the ``/commons`` directory inside the container.
 #
 # NOTE: If the host user has a ``~/.ssh`` directory, then the start 
 #       subcommand will automatically map the host ``~/.ssh`` directory to 

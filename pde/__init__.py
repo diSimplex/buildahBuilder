@@ -22,7 +22,7 @@ import pde.lists
 # Handle configuration
 
 defaultConfig = {
-  'commonDir'   : "~/common",
+  'commonsDir'   : "~/commons",
   'configYaml'  : "config.yaml",
   'imageYaml'   : "image.yaml",
   'pdeYaml'     : "pde.yaml",
@@ -90,8 +90,8 @@ def loadConfig(pdeName, configPath, verbose):
   config['configDir'] = os.path.dirname(configPath)
   sanitizeFilePath(config, 'cekitConfig', config['configDir'])
 
-  sanitizeFilePath(config, 'commonDir', None)
-  config['pdeDir'] = os.path.join(config['commonDir'], "pde", config['pdeName'])
+  sanitizeFilePath(config, 'commonsDir', None)
+  config['pdeDir'] = os.path.join(config['commonsDir'], "pde", config['pdeName'])
   config['pdeWorkDir'] = os.path.join(config['pdeDir'], "pde")
   sanitizeFilePath(config, 'imageYaml', config['pdeWorkDir'])
   sanitizeFilePath(config, 'pdeYaml', config['pdeWorkDir'])
@@ -173,7 +173,7 @@ def cli(ctx, pde_name, config_file, verbose):
 
       config : used to view the configuration parameters as seen by pde,
 
-      create/destroy : used to manage the "common" area as well as image and pde descriptions,
+      create/destroy : used to manage the "commons" area as well as image and pde descriptions,
 
       build/remove : used to manage the podman images used by a running container, 
 

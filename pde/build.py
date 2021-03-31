@@ -83,7 +83,7 @@ def startCmd(ctx):
   volumes = []
   if 'volumes' in pde :
     volumes = pde['volumes']
-  volumes.append("{}:/common".format(ctx.obj['pdeDir']))
+  volumes.append("{}:/commons".format(ctx.obj['pdeDir']))
   hostSSHdir = os.path.expanduser('~/.ssh')
   if os.path.isdir(hostSSHdir) :
     volumes.append("{}:{}/.ssh:ro".format(hostSSHdir, pde['userDir']))
@@ -194,10 +194,10 @@ def build(ctx, override):
   This subcommand uses cekit to build a podman conatiner image for a given 
   pde. 
 
-  The cekit tool uses the ``image.yaml`` YAML file (in the "common" area 
+  The cekit tool uses the ``image.yaml`` YAML file (in the "commons" area 
   for a given pde) to describe how to buile a container. 
 
-  This ``image.yaml`` file and the associated "common" area are created by 
+  This ``image.yaml`` file and the associated "commons" area are created by 
   the ``create`` subcommand. 
 
   The current values in ``image.yaml`` file will be listed in the 
@@ -212,10 +212,10 @@ def build(ctx, override):
   This subcommand the uses (rootless) podman to run a pde container in the 
   background. 
 
-  It uses the ``pde.yaml`` file (in the "common" area for a given pde) to 
+  It uses the ``pde.yaml`` file (in the "commons" area for a given pde) to 
   describe how to run the pde container image. 
 
-  This ``pde.yaml`` file and the associated "common" area are created by 
+  This ``pde.yaml`` file and the associated "commons" area are created by 
   the ``create`` subcommand. 
 
   The current values in ``pde.yaml`` file will be listed in the ``pde`` 

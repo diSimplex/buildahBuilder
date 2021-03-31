@@ -9,7 +9,7 @@ echo ""
 
 mkdir -p $HOME/bin
 
-export PATH=/common/bin:$HOME/bin:$PATH
+export PATH=/commons/bin:$HOME/bin:$PATH
 
 mkdir -p /usr/local/bin
 

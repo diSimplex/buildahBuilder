@@ -4,7 +4,7 @@
 # for the Doxygen C documentation
 
 . $HOME/kvmVars
-. /common/ipAddress
+. /commons/ipAddress
 
 echo ""
 echo "http://$ipAddress:6161/index.html"

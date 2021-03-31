@@ -35,16 +35,16 @@ consisting of the following subcommands:
 
    ----
    
-2. **create:** This subcommand creates the "common" development area used 
+2. **create:** This subcommand creates the "commons" development area used 
    by a given pde. This area is common to both the host as well as the 
    running pde container. This allows any artifacts used or built inside 
    the pde to be easily accessible from the host. 
 
    On the host, this "comnon" directory is, by default, 
-   ``~/common/pde/<<pdeName>>``, where ``<<pdeName>>`` is the name of the 
+   ``~/commons/pde/<<pdeName>>``, where ``<<pdeName>>`` is the name of the 
    pde as specified as the first argument to the ``pde`` command. 
 
-   Inside the running pde, this "common" directory is ``/common``.
+   Inside the running pde, this "commons" directory is ``/commons``.
 
    Since the pde is run as a rootless podman container, "root" inside the 
    container corresponds to the user on the host who started the pde 
@@ -55,12 +55,12 @@ consisting of the following subcommands:
    The ``create`` subcommand also uses 
    [Jinja2](https://jinja2docs.readthedocs.io/en/stable/)
    to expand the configuration files in the current working directory 
-   before copying these configuration files to the "common" area where 
+   before copying these configuration files to the "commons" area where 
    they are used by all of the other subcommands. Using Jinja2 to expand 
    these configuration files, allows you to keep parameters which are 
-   common to the various configuration files in one place. 
+   commons to the various configuration files in one place. 
 
-3. **destroy:** This subcommand destroys the "common" development area 
+3. **destroy:** This subcommand destroys the "commons" development area 
    created by the ``create`` subcommand. 
 
    ----
@@ -128,7 +128,7 @@ configuration file uses the "ini" format (all other configuration files
 use the YAML format).
 
 The **local configuration** of both the pde and the cekit commands is 
-located in the "common" directory create by the pde ``create`` subcommand. 
+located in the "commons" directory create by the pde ``create`` subcommand. 
 This **local configuration** is specific to a given pde and takes 
 precedence over any global configuraiton. This configuration consists of 
 the following [YAML](https://en.wikipedia.org/wiki/YAML) files: 
@@ -147,17 +147,17 @@ found in the current working directory:
 
   - **image.yaml** This file is a
     [Jinja2](https://jinja2docs.readthedocs.io/en/stable/)
-    template which is expanded and copied into the "common" area for a 
+    template which is expanded and copied into the "commons" area for a 
     given pde. 
 
   - **pde.yaml** This file is a
     [Jinja2](https://jinja2docs.readthedocs.io/en/stable/)
-    template which is expanded and copied into the "common" area for a 
+    template which is expanded and copied into the "commons" area for a 
     given pde. 
 
   - **Readme.md**  This file is a
     [Jinja2](https://jinja2docs.readthedocs.io/en/stable/)
-    template which is expanded and copied into the "common" area for a 
+    template which is expanded and copied into the "commons" area for a 
     given pde. It can be used to keep an extended description of how to 
     use the pde. 
 
