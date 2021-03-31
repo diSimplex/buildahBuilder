@@ -242,8 +242,7 @@ def build(ctx, override):
   ####################################################################
   # Start the container using the new image!
   #
-  cmd = startCmd(ctx
-  )
+  cmd = startCmd(ctx)
   click.echo("Starting {}".format(ctx.obj['pdeName']))
   logging.info("using podman command:\n-----\n" + cmd + "\n-----")
   click.echo("------------------------------------------------------------")
@@ -252,6 +251,29 @@ def build(ctx, override):
   sys.stdout.flush()
   click.echo("------------------------------------------------------------")
 
+  ####################################################################
+  # Run the finalization scripts
+  #
+  pCmd = "podman exec -it"
+  
+  shell = os.path.join("/", "bin", "bash")
+  if 'shell' in ctx.obj['pde'] :
+    shell = ctx.obj['pde']['shell']
+
+  shellrc = os.path.join(ctx.obj['homeDir'], ".bashrc")
+  if 'shellrc' in ctx.obj['pde'] :
+    shellrc = ctx.obj['pde']['shellrc']
+    
+  pCmd = pCmd + " {} {} --login --rcfile {} -c \"{}\"".format(ctx.obj['pdeName'], shell, shellrc, cmdStr)
+ 
+  click.echo("Finalizing {}".format(ctx.obj['pdeName']))
+  logging.info("using podman command:\n-----\n" + cmd + "\n-----")
+  click.echo("------------------------------------------------------------")
+  sys.stdout.flush()
+  os.system(cmd)
+  sys.stdout.flush()
+  click.echo("------------------------------------------------------------")
+  
   ####################################################################
   # Stop the container until we want to use it...
   #

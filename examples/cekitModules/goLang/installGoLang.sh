@@ -21,8 +21,14 @@ recordVar PATH "/usr/local/go/bin:\$PATH"
 
 go version
 
-mkdir -p /commons/go
+# The GOPATH is used as the download cache of `use`d go projects
+recordVar GOPATH $HOME/go
+mkdir -p $GOPATH
 
-recordVar GOPATH /commons/go
+# using GOBIN as /commons/bin ensures that all go binaries we create 
+# are accessible from outside the container.
 recordVar GOBIN /commons/bin
+mkdir -p $GOBIN
+
+# We add GOBIN and GOPATH to the executable PATH
 recordVar PATH \$GOBIN:\$GOPATH/bin:/usr/local/go/bin:\$PATH

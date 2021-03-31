@@ -1,0 +1,14 @@
+# This CEKit module describes how to install the goLang docTool into a pde.
+
+# This module:
+# - assumes a Debian based container,
+# - requires the goLang module
+
+schema_version: 1
+
+name: docTool
+version: 1.0
+description: Adds the goLang docTool
+
+execute:
+  - script: installDocTool.sh

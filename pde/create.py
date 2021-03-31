@@ -7,6 +7,18 @@ import logging
 import os
 import shutil
 
+def fixUpFile(ctx, fileName, fileContents) :
+  baseFileName = os.path.basename(fileName)
+  if baseFileName == os.path.basename(ctx.obj['imageYaml']) :
+    logging.info("Adding volumes to {}".format(fileName))
+    return fileContents + """
+
+volumes:
+  - name: commonsVolume
+    path: /commons
+
+"""
+  return fileContents
 
 def renderTemplate(ctx, fileName) :
   def j2_lookup_filter(value, tableName) :
@@ -33,7 +45,8 @@ def renderTemplate(ctx, fileName) :
     with open(fileName, 'r') as inFile :
       template = tmplEnv.from_string(inFile.read())
     with open(os.path.join(ctx.obj['pdeWorkDir'], fileName), 'w') as outFile :
-      outFile.write(template.render(ctx.obj))
+      fileContents = template.render(ctx.obj) 
+      outFile.write(fixUpFile(ctx, fileName, fileContents))
   except Exception as err:
     logging.error("Could not render the Jinja2 template [{}]".format(fileName))
     logging.error(err)
@@ -56,8 +69,13 @@ def create(ctx):
   in this directory) to provide additional key/value pairs for use by your 
   Jinja2 templates. 
 
-  NOTE that any Jinja2 expressions used in YAML values MUST be wrapped in 
+  NOTE: that any Jinja2 expressions used in YAML values MUST be wrapped in 
   quotes. 
+
+  NOTE: the ``/commons`` volume is automatically added to all 
+  ``image.yaml`` CEKit descriptions. This ensures all changes made to the 
+  ``/commons`` directory are copied over to the running container when it 
+  is started. 
     
   """
   click.echo("Creating {}".format(ctx.obj['pdeName']))

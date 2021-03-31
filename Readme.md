@@ -60,6 +60,11 @@ consisting of the following subcommands:
    these configuration files, allows you to keep parameters which are 
    commons to the various configuration files in one place. 
 
+  NOTE: the ``/commons`` volume is automatically added to all 
+  ``image.yaml`` CEKit descriptions. This ensures all changes made to the 
+  ``/commons`` directory are copied over to the running container when it 
+  is started. 
+
 3. **destroy:** This subcommand destroys the "commons" development area 
    created by the ``create`` subcommand. 
 
