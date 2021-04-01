@@ -13,15 +13,13 @@ def enter(ctx, work_dir) :
   """
   Enters a running pde container.
   """
-  shell = "bash"
-  if 'shell' in ctx.obj['pde'] :
-    shell = ctx.obj['pde']['shell']
-
   pCmd = "podman exec -it"
   if work_dir is not None :
     logging.info("Using the [{}] working directory".format(work_dir))
     pCmd = pCmd + " --workdir {}".format(work_dir)
-  pCmd = pCmd + " {} {}".format(ctx.obj['pdeName'], shell)
+  pCmd = pCmd + " {} {}".format(
+    ctx.obj['pdeName'], ctx.obj['pde']['interactiveShell']
+  )
 
   logging.info("using podman command:\n-----\n" + pCmd + "\n-----")
   click.echo("Entering {}".format(ctx.obj['pdeName']))

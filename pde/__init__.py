@@ -142,13 +142,22 @@ def loadConfig(pdeName, configPath, verbose):
       print("\tDid you remember to wrap all YAML values\n\twith Jinja2 variables in quotes?")
 
   if 'shell' not in config['pde'] :
+    if verbose is not None and verbose:
+      print("INFO: setting shell to bash")
     config['pde']['shell'] = os.path.join("/", "bin", "bash")
 
   if 'shellrc' not in config['pde'] :
+    if verbose is not None and verbose:
+      print("INFO: setting shellrc to .bashrc")
     config['pde']['shellrc'] = os.path.join(
       config['image']['run']['workdir'],
       ".bashrc"
     )
+
+  if 'interactiveShell' not in config['pde'] :
+    if verbose is not None and verbose:
+      print("INFO: setting interactive shell to bash")
+    config['pde']['interactiveShell'] = os.path.join("/", "bin", "bash")
 
   # Now add in platform parameters
   thePlatform = {}
