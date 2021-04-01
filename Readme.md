@@ -86,7 +86,7 @@ consisting of the following subcommands:
    method), then this file is automatically used as an override file.
 
    The build subcommand:
-     - uses CEKit and it associated ``image.yaml`` to build an image,
+     - uses CEKit and its associated ``image.yaml`` to build an image,
      - uses Podman run and the assocaited ``pde.yaml`` to start a container,
      - uses Podeman exec and any installed ``finalizeXXXX`` scripts to finalize the contents of the container.
 
