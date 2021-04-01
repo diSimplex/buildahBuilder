@@ -46,3 +46,5 @@ PDE_FUNCTIONS
 recordVar PDE_VARS $HOME/pdeVars
 
 echo "source $HOME/pdeVars" >> $HOME/.bashrc
+
+touch $HOME/finalizePDE

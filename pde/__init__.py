@@ -84,7 +84,7 @@ def loadConfig(pdeName, configPath, verbose):
   else:
     print("ERROR: a configPath must be specified!")
     sys.exit(-1)
-  
+
   # Now sanitize any known configurable paths
   sanitizeFilePath(config, 'configPath', None)
   config['configDir'] = os.path.dirname(configPath)
@@ -115,6 +115,15 @@ def loadConfig(pdeName, configPath, verbose):
       print("    > " + "\n    > ".join(str(e).split('\n')))
       print("  Did you remember to wrap all YAML values\n  with Jinja2 variables in quotes?")
 
+  if 'run' not in config['image'] :
+    config['image']['run'] = {}
+    
+  if 'user' not in config['image']['run'] :
+    config['image']['run']['user'] = "root"
+
+  if 'workdir' not in config['image']['run'] :
+    config['image']['run']['workdir'] = "/root"
+
   # Now add in the pde.yaml (if it exists)
   config['pde'] = {}
   try:
@@ -131,6 +140,15 @@ def loadConfig(pdeName, configPath, verbose):
       print("INFO: could not load the pde file: [{}]".format(config['pdeYaml']))
       print("\t" + "\n\t".join(str(e).split('\n')))
       print("\tDid you remember to wrap all YAML values\n\twith Jinja2 variables in quotes?")
+
+  if 'shell' not in config['pde'] :
+    config['pde']['shell'] = os.path.join("/", "bin", "bash")
+
+  if 'shellrc' not in config['pde'] :
+    config['pde']['shellrc'] = os.path.join(
+      config['image']['run']['workdir'],
+      ".bashrc"
+    )
 
   # Now add in platform parameters
   thePlatform = {}

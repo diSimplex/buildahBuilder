@@ -28,7 +28,11 @@ mkdir -p $GOPATH
 # using GOBIN as /commons/bin ensures that all go binaries we create 
 # are accessible from outside the container.
 recordVar GOBIN /commons/bin
-mkdir -p $GOBIN
+# moved to finalizeGoLang.sh: mkdir -p $GOBIN
 
 # We add GOBIN and GOPATH to the executable PATH
 recordVar PATH \$GOBIN:\$GOPATH/bin:/usr/local/go/bin:\$PATH
+
+cp -v /tmp/artifacts/finalizeGoLang.sh $HOME
+
+echo ". $HOME/finalizeGoLang.sh" >> $HOME/finalizePDE

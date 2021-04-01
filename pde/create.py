@@ -8,16 +8,16 @@ import os
 import shutil
 
 def fixUpFile(ctx, fileName, fileContents) :
-  baseFileName = os.path.basename(fileName)
-  if baseFileName == os.path.basename(ctx.obj['imageYaml']) :
-    logging.info("Adding volumes to {}".format(fileName))
-    return fileContents + """
-
-volumes:
-  - name: commonsVolume
-    path: /commons
-
-"""
+  #baseFileName = os.path.basename(fileName)
+  #if baseFileName == os.path.basename(ctx.obj['imageYaml']) :
+  #  logging.info("Adding volumes to {}".format(fileName))
+  #  return fileContents + """
+#
+#volumes:
+#  - name: commonsVolume
+#    path: /commons
+#
+#"""
   return fileContents
 
 def renderTemplate(ctx, fileName) :

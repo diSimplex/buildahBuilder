@@ -53,15 +53,12 @@ def run(ctx, detached, work_dir, cmd_args):
     logging.info("Using the [{}] working directory".format(work_dir))
     pCmd = pCmd + " --workdir {}".format(work_dir)
 
-  shell = os.path.join("/", "bin", "bash")
-  if 'shell' in ctx.obj['pde'] :
-    shell = ctx.obj['pde']['shell']
-
-  shellrc = os.path.join(ctx.obj['homeDir'], ".bashrc")
-  if 'shellrc' in ctx.obj['pde'] :
-    shellrc = ctx.obj['pde']['shellrc']
-    
-  pCmd = pCmd + " {} {} --login --rcfile {} -c \"{}\"".format(ctx.obj['pdeName'], shell, shellrc, cmdStr)
+  pCmd = pCmd + " {} {} --login --rcfile {} -c \"{}\"".format(
+    ctx.obj['pdeName'], 
+    ctx.obj['pde']['shell'],
+    ctx.obj['pde']['shellrc'],
+    cmdStr
+  )
   
   try:
     click.echo("Running    {}".format(ctx.obj['pdeName']))

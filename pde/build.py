@@ -86,7 +86,7 @@ def startCmd(ctx):
   volumes.append("{}:/commons".format(ctx.obj['pdeDir']))
   hostSSHdir = os.path.expanduser('~/.ssh')
   if os.path.isdir(hostSSHdir) :
-    volumes.append("{}:{}/.ssh:ro".format(hostSSHdir, pde['userDir']))
+    volumes.append("{}:{}/.ssh".format(hostSSHdir, pde['userDir']))
   if sshAuthSockDir :
     mappedSshAuthSockDir = None
     for aVolume in volumes :
@@ -99,7 +99,7 @@ def startCmd(ctx):
         runEnvs['SSH_AUTH_SOCK'] = os.path.join(mappedSshAuthSockDir, sshAuthSockFile)
     else :
       logging.info("Adding sshAuthSockDir [{}]".format(sshAuthSockDir))
-      volumes.append("{}:{}:ro".format(sshAuthSockDir, sshAuthSockDir))
+      volumes.append("{}:{}".format(sshAuthSockDir, sshAuthSockDir))
 
   ####################################################################
   # Now that we have all of the magic parameters set...
@@ -254,23 +254,18 @@ def build(ctx, override):
   ####################################################################
   # Run the finalization scripts
   #
-  pCmd = "podman exec -it"
-  
-  shell = os.path.join("/", "bin", "bash")
-  if 'shell' in ctx.obj['pde'] :
-    shell = ctx.obj['pde']['shell']
-
-  shellrc = os.path.join(ctx.obj['homeDir'], ".bashrc")
-  if 'shellrc' in ctx.obj['pde'] :
-    shellrc = ctx.obj['pde']['shellrc']
-    
-  pCmd = pCmd + " {} {} --login --rcfile {} -c \"{}\"".format(ctx.obj['pdeName'], shell, shellrc, cmdStr)
+  pCmd = "podman exec -it {} {} --login --rcfile {} {}/finalizePDE".format(
+    ctx.obj['pdeName'],
+    ctx.obj['pde']['shell'],
+    ctx.obj['pde']['shellrc'],
+    ctx.obj['image']['run']['workdir']
+  )
  
   click.echo("Finalizing {}".format(ctx.obj['pdeName']))
-  logging.info("using podman command:\n-----\n" + cmd + "\n-----")
+  logging.info("using podman command:\n-----\n" + pCmd + "\n-----")
   click.echo("------------------------------------------------------------")
   sys.stdout.flush()
-  os.system(cmd)
+  os.system(pCmd)
   sys.stdout.flush()
   click.echo("------------------------------------------------------------")
   
