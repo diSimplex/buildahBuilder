@@ -7,6 +7,36 @@ import platform
 import sys
 import yaml
 
+#######################################################################
+# start by monkey patching click to allow aliased commands
+# adapted from:
+#   https://click.palletsprojects.com/en/8.1.x/advanced/#command-aliases
+#
+def aliased_get_command(self, ctx, cmd_name) :
+  possibleCmd = self.orig_get_command(ctx, cmd_name)
+  if possibleCmd is not None:
+    return possibleCmd
+  matches = [aCmd for aCmd in self.list_commands(ctx)
+             if aCmd.startswith(cmd_name)]
+  if not matches:
+    return None
+  elif len(matches) == 1:
+    return self.orig_get_command(ctx, matches[0])
+  ctx.fail(f"Too many matches: {', '.join(sorted(matches))}")
+
+def aliased_resolve_command(self, ctx, args):
+  # always return the full command name
+  _, cmd, args = self.orig_resolve_command(ctx, args)
+  return cmd.name, cmd, args
+
+click.Group.orig_get_command = click.Group.get_command
+click.Group.get_command = aliased_get_command
+
+click.Group.orig_resolve_command = click.Group.resolve_command
+click.Group.resolve_command = aliased_resolve_command
+
+#######################################################################
+
 import pde.build
 import pde.config
 import pde.create
@@ -22,7 +52,7 @@ import pde.lists
 # Handle configuration
 
 defaultConfig = {
-  'commonsDir'   : "~/commons",
+  'commonsDir'   : "~/GitTools/Commons",
   'configYaml'  : "config.yaml",
   'imageYaml'   : "image.yaml",
   'pdeYaml'     : "pde.yaml",
@@ -37,7 +67,7 @@ def sanitizeFilePath(config, filePathKey, pathPrefix) :
 
   if pathPrefix is not None :
     config[filePathKey] = os.path.join(pathPrefix, config[filePathKey])
-    
+
   if config[filePathKey][0] != "/" :
     config[filePathKey] = os.path.abspath(config[filePathKey])
 
@@ -45,33 +75,29 @@ def loadConfig(pdeName, configPath, verbose):
 
   # Start with the default configuration (above)
   config = defaultConfig
-  
+
   # Add the global configuration (if any)
   configPath = os.path.abspath(os.path.expanduser(configPath))
   try:
-    globalConfigFile = open(configPath)
-    globalConfig = yaml.safe_load(globalConfigFile)
-    globalConfigFile.close()
-    if globalConfig is not None : 
-      config.update(globalConfig)
+    with open(configPath) as globalConfigFile :
+      globalConfig = yaml.safe_load(globalConfigFile)
+      if globalConfig is not None : config.update(globalConfig)
   except :
     if verbose is not None and verbose :
       print("INFO: no global configuration file found: [{}]".format(configPath))
 
-  # Now add in any local configuration 
+  # Now add in any local configuration
   try:
-    localConfigFile = open(config['configYaml'], 'r')
-    localConfig = yaml.safe_load(localConfigFile)
-    localConfigFile.close()
-    if localConfig is not None : 
-      config.update(localConfig)
+    with open(config['configYaml'], 'r') as localConfigFile :
+      localConfig = yaml.safe_load(localConfigFile)
+      if localConfig is not None : config.update(localConfig)
   except :
     if verbose is not None and verbose :
       print("INFO: no local configuration file found: [{}]".format(config['configYaml']))
 
   # Now add in command line argument/options
   if pdeName is not None :
-    config['pdeName'] = pdeName
+    config['pdeName'] = pdeName.rstrip(os.sep)
   else:
     print("ERROR: a pdeName must be specified!")
     sys.exit(-1)
@@ -91,11 +117,11 @@ def loadConfig(pdeName, configPath, verbose):
   sanitizeFilePath(config, 'cekitConfig', config['configDir'])
 
   sanitizeFilePath(config, 'commonsDir', None)
-  config['pdeDir'] = os.path.join(config['commonsDir'], "pde", config['pdeName'])
+  config['pdeDir'] = os.path.join(config['commonsDir'], config['pdeName'])
   config['pdeWorkDir'] = os.path.join(config['pdeDir'], "pde")
   sanitizeFilePath(config, 'imageYaml', config['pdeWorkDir'])
   sanitizeFilePath(config, 'pdeYaml', config['pdeWorkDir'])
-  config['curDir'] = os.path.abspath(os.getcwd())
+  config['curDir'] = os.path.join(os.path.abspath(os.getcwd()), config['pdeName'])
   config['homeDir'] = os.path.expanduser("~")
 
   # Now add in the image.yaml (if it exists)
@@ -104,9 +130,9 @@ def loadConfig(pdeName, configPath, verbose):
     imageFile = open(config['imageYaml'], 'r')
     image = yaml.safe_load(imageFile)
     imageFile.close()
-    if image is not None : 
+    if image is not None :
       config['image'] = image
-  except IOError : 
+  except IOError :
     if verbose is not None and verbose :
       print("INFO: could not load the image file: [{}]".format(config['imageYaml']))
   except Exception as e :
@@ -117,7 +143,7 @@ def loadConfig(pdeName, configPath, verbose):
 
   if 'run' not in config['image'] :
     config['image']['run'] = {}
-    
+
   if 'user' not in config['image']['run'] :
     config['image']['run']['user'] = "root"
 
@@ -130,9 +156,9 @@ def loadConfig(pdeName, configPath, verbose):
     pdeFile = open(config['pdeYaml'], 'r')
     pde = yaml.safe_load(pdeFile)
     pdeFile.close()
-    if pde is not None : 
+    if pde is not None :
       config['pde'] = pde
-  except IOError : 
+  except IOError :
     if verbose is not None and verbose :
       print("INFO: could not load the pde file: [{}]".format(config['pdeYaml']))
   except Exception as e :
@@ -168,7 +194,7 @@ def loadConfig(pdeName, configPath, verbose):
   thePlatform['machine']   = platform.machine()
   thePlatform['processor'] = platform.processor()
   config['platform']       = thePlatform
-  
+
   # Setup logging
   if config['verbose'] :
     logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
@@ -177,7 +203,7 @@ def loadConfig(pdeName, configPath, verbose):
 
   # Let us see the loaded configuration if we are running --verbose
   logging.info("configuration:\n------\n" + yaml.dump(config) + "------\n")
-  
+
   return config
 
 ########################################################################
@@ -202,13 +228,13 @@ def cli(ctx, pde_name, config_file, verbose):
 
       create/destroy : used to manage the "commons" area as well as image and pde descriptions,
 
-      build/remove : used to manage the podman images used by a running container, 
+      build/remove : used to manage the podman images used by a running container,
 
-      start/stop : used to manage the running container used for development, 
+      start/stop : used to manage the running container used for development,
 
-      enter : used to enter an already running conainter using the configured shell [default=bash] (this command may be used multiple times). 
+      enter : used to enter an already running conainter using the configured shell [default=bash] (this command may be used multiple times).
 
-      run : used to run a single command in an already running conainter. 
+      run : used to run a single command in an already running conainter.
 
     For details on all other configuration parameters type:
 

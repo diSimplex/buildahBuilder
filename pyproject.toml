@@ -1,3 +1,28 @@
+[project]
+name = "podmanDevelopmentEnvironments"
+version = "0.0.1"
+description = "Containerised development using (rootless) Podman and CEKit."
+authors = [
+    {name = "Stephen Gaito", email = "stephen@perceptisys.co.uk"},
+]
+dependencies = [
+    "click~=8.0",
+    "jinja2~=3.0",
+    "pyyaml~=5.4",
+]
+requires-python = ">=3.9"
+dynamic = ["classifiers"]
+license = {text = "Apache-2.0"}
+
+[project.urls]
+homepage = "https://github.com/stephengaito/podmanDevelopmentEnvironments"
+
+[project.scripts]
+pde = "pde:cli"
+
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"
+
+[tool]
+[tool.pdm]

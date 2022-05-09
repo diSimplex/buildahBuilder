@@ -27,7 +27,7 @@ def renderTemplate(ctx, fileName) :
     """
     if tableName not in ctx.obj :
       raise Exception("Lookup filter: There is no dictionary named {}".format(tableName))
-      
+
     theTable = ctx.obj[tableName]
 
     if type(theTable) is not dict :
@@ -40,12 +40,12 @@ def renderTemplate(ctx, fileName) :
 
   tmplEnv = jinja2.Environment()
   tmplEnv.filters['lookup'] = j2_lookup_filter
-  
-  try: 
+
+  try:
     with open(fileName, 'r') as inFile :
       template = tmplEnv.from_string(inFile.read())
     with open(os.path.join(ctx.obj['pdeWorkDir'], fileName), 'w') as outFile :
-      fileContents = template.render(ctx.obj) 
+      fileContents = template.render(ctx.obj)
       outFile.write(fixUpFile(ctx, fileName, fileContents))
   except Exception as err:
     logging.error("Could not render the Jinja2 template [{}]".format(fileName))
@@ -57,31 +57,33 @@ def create(ctx):
   """
   Creates a new pde enviroment.
 
-  This command creates the `commons` directory associated with this pde and 
-  then expands the Readme.md, and any `*.yaml` files in the current 
-  directory using the Jinja2 template engine, copying the results to the 
-  pde commons directory. 
+  This command creates the `commons` directory associated with this pde and
+  then expands the Readme.md, and any `*.yaml` files in the current
+  directory using the Jinja2 template engine, copying the results to the
+  pde commons directory.
 
-  The Jinja2 templates have access to all configuration values which will 
-  be reported by using the `--verbose` command line switch. 
+  The Jinja2 templates have access to all configuration values which will
+  be reported by using the `--verbose` command line switch.
 
-  You can use the local pde configuration file (by default, 'config.yaml' 
-  in this directory) to provide additional key/value pairs for use by your 
-  Jinja2 templates. 
+  You can use the local pde configuration file (by default, 'config.yaml'
+  in this directory) to provide additional key/value pairs for use by your
+  Jinja2 templates.
 
-  NOTE: that any Jinja2 expressions used in YAML values MUST be wrapped in 
-  quotes. 
+  NOTE: that any Jinja2 expressions used in YAML values MUST be wrapped in
+  quotes.
 
-  NOTE: the ``/commons`` volume is automatically added to all 
-  ``image.yaml`` CEKit descriptions. This ensures all changes made to the 
-  ``/commons`` directory are copied over to the running container when it 
-  is started. 
-    
+  NOTE: the ``/commons`` volume is automatically added to all
+  ``image.yaml`` CEKit descriptions. This ensures all changes made to the
+  ``/commons`` directory are copied over to the running container when it
+  is started.
+
   """
   click.echo("Creating {}".format(ctx.obj['pdeName']))
 
   logging.info("(re)creating the commons directory")
   os.makedirs(ctx.obj['pdeWorkDir'], exist_ok=True)
+
+  os.chdir(ctx.obj['curDir'])
 
   for aFileName in glob.glob("*", recursive=True) :
     logging.info("expanding {} using Jinja2".format(aFileName))
