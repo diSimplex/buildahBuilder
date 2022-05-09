@@ -15,10 +15,10 @@ def destroy(ctx, all, yes) :
   Remove the commons area for a given pde.
   """
 
-  if yes :
-    if all :
-      click.echo("Deleting {} (all)".format(ctx.obj['pdeName']))
-      shutil.rmtree(ctx.obj['pdeDir'], ignore_errors=True)
-    else:
-      click.echo("Deleting {} (workDir)".format(ctx.obj['pdeName']))
-      shutil.rmtree(ctx.obj['pdeWorkDir'], ignore_errors=True)
+#  if yes :
+#    if all :
+#      click.echo("Deleting {} (all)".format(ctx.obj['pdeName']))
+#      shutil.rmtree(ctx.obj['pdeDir'], ignore_errors=True)
+#    else:
+#      click.echo("Deleting {} (workDir)".format(ctx.obj['pdeName']))
+#      shutil.rmtree(ctx.obj['pdeWorkDir'], ignore_errors=True)

@@ -148,7 +148,7 @@ def loadConfig(pdeName, configPath, verbose):
     config['image']['run']['user'] = "root"
 
   if 'workdir' not in config['image']['run'] :
-    config['image']['run']['workdir'] = "/root"
+    config['image']['run']['workdir'] = "/commons"
 
   # Now add in the pde.yaml (if it exists)
   config['pde'] = {}

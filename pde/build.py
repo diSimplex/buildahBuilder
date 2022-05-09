@@ -28,11 +28,11 @@ def buildCmd(ctx, override):
     if os.path.isfile(override) :
       cmdParts.append("--overrides-file")
       cmdParts.append(override)
-     
+
   cmdParts.append("podman")
   cmd = " ".join(cmdParts)
   return cmd
-  
+
 ##########################################################################
 def startCmd(ctx):
   image = {}
@@ -67,7 +67,7 @@ def startCmd(ctx):
   runEnvs = {}
   if 'runEnvs' in pde :
     runEnvs.update( pde['runEnvs'] )
-  # add in DISPLAY 
+  # add in DISPLAY
   display =  os.getenv('DISPLAY')
   if display :
     runEnvs['DISPLAY'] = display
@@ -104,12 +104,12 @@ def startCmd(ctx):
   ####################################################################
   # Now that we have all of the magic parameters set...
   # we can build ``the``strings to be used in the run cmd string...
-  
+
   theUser = "-u \"{}:{}\"".format(pde['user'], pde['user'])
   theWorkingDir = ""
   if 'workingDir' in pde :
     theWorkingDir = "-w \"{}\"".format(pde['workingDir'])
-  
+
   theRunEnvs = ""
   for aRunEnvKey, aRunEnvValue in runEnvs.items() :
     theRunEnvs = theRunEnvs + " -e \"{}={}\"".format(aRunEnvKey, aRunEnvValue)
@@ -125,7 +125,7 @@ def startCmd(ctx):
   if 'devices' in pde :
     for aDeviceSpec in pde['devices'] :
       theDevices = theDevices + " --device={}".format(aDeviceSpec)
-  
+
   theCapabilities = ""
   if 'capabilities' in pde :
     if 'add' in pde['capabilities'] :
@@ -147,7 +147,7 @@ def startCmd(ctx):
 
   detachedStr = "--detach=true"
   cmdStr      = "sleep infinity"
-    
+
   ####################################################################
   # We can now assemble the run cmd string...
   #
@@ -191,38 +191,38 @@ def build(ctx, override):
 
   Build and run a pde container image.
 
-  This subcommand uses cekit to build a podman conatiner image for a given 
-  pde. 
+  This subcommand uses cekit to build a podman conatiner image for a given
+  pde.
 
-  The cekit tool uses the ``image.yaml`` YAML file (in the "commons" area 
-  for a given pde) to describe how to buile a container. 
+  The cekit tool uses the ``image.yaml`` YAML file (in the "commons" area
+  for a given pde) to describe how to buile a container.
 
-  This ``image.yaml`` file and the associated "commons" area are created by 
-  the ``create`` subcommand. 
+  This ``image.yaml`` file and the associated "commons" area are created by
+  the ``create`` subcommand.
 
-  The current values in ``image.yaml`` file will be listed in the 
-  ``image`` configuration key which can be found by using the ``config`` 
-  subcommand. 
+  The current values in ``image.yaml`` file will be listed in the
+  ``image`` configuration key which can be found by using the ``config``
+  subcommand.
 
-  If the ``--override`` option is not specified but the pde working 
-  directory contains a file named ``override-<<machine>>.yaml`` (where 
-  ``<machine>>`` is the result of the Python ``platform.machine()`` 
-  method), then this file is automatically used as an override file. 
+  If the ``--override`` option is not specified but the pde working
+  directory contains a file named ``override-<<machine>>.yaml`` (where
+  ``<machine>>`` is the result of the Python ``platform.machine()``
+  method), then this file is automatically used as an override file.
 
-  This subcommand the uses (rootless) podman to run a pde container in the 
-  background. 
+  This subcommand the uses (rootless) podman to run a pde container in the
+  background.
 
-  It uses the ``pde.yaml`` file (in the "commons" area for a given pde) to 
-  describe how to run the pde container image. 
+  It uses the ``pde.yaml`` file (in the "commons" area for a given pde) to
+  describe how to run the pde container image.
 
-  This ``pde.yaml`` file and the associated "commons" area are created by 
-  the ``create`` subcommand. 
+  This ``pde.yaml`` file and the associated "commons" area are created by
+  the ``create`` subcommand.
 
-  The current values in ``pde.yaml`` file will be listed in the ``pde`` 
-  configuration key which can be found by using the ``config`` subcommand. 
+  The current values in ``pde.yaml`` file will be listed in the ``pde``
+  configuration key which can be found by using the ``config`` subcommand.
 
   """
-  
+
   ####################################################################
   # Build the new image!
   #
@@ -238,7 +238,7 @@ def build(ctx, override):
   if result != 0 :
     click.echo("Building {} FAILED!".format(ctx.obj['pdeName']))
     sys.exit(-1)
-  
+
   ####################################################################
   # Start the container using the new image!
   #
@@ -258,9 +258,9 @@ def build(ctx, override):
     ctx.obj['pdeName'],
     ctx.obj['pde']['shell'],
     ctx.obj['pde']['shellrc'],
-    ctx.obj['image']['run']['workdir']
+    os.path.join(ctx.obj['image']['run']['workdir'], "pde")
   )
- 
+
   click.echo("Finalizing {}".format(ctx.obj['pdeName']))
   logging.info("using podman command:\n-----\n" + pCmd + "\n-----")
   click.echo("------------------------------------------------------------")
@@ -268,7 +268,7 @@ def build(ctx, override):
   os.system(pCmd)
   sys.stdout.flush()
   click.echo("------------------------------------------------------------")
-  
+
   ####################################################################
   # Stop the container until we want to use it...
   #
